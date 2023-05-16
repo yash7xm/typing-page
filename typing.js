@@ -1,5 +1,4 @@
 // caret
-
 const mouseCaret = document.querySelector('.mouseCaret');
 const navLinks = document.querySelectorAll('nav .grow-link');
 const borderLinks = document.querySelectorAll('.border-link');
@@ -15,7 +14,6 @@ window.addEventListener('mousemove', (e) => {
 
 navLinks.forEach(link => {
     link.addEventListener('mouseover', () => {
-        console.log('inside nav link');
         mouseCaret.classList.add('caret-grow');
         link.classList.add('hovered-link');
     })
@@ -47,7 +45,6 @@ li.forEach(link => {
 
 resDiv.forEach(link => {
     link.addEventListener('mouseover', () => {
-        console.log('inside nav link');
         mouseCaret.classList.add('caret-grow');
         link.classList.add('hovered-link');
     })
@@ -80,7 +77,7 @@ const str = document.querySelector(".given-text");
 const input = document.querySelector("#myInput");
 const timerSet = document.querySelectorAll("li");
 const watch = document.querySelector(".timer");
-const time = document.querySelector(".bi-clock");
+const time = document.querySelector(".fa-clock");
 const caret = document.querySelector(".caret");
 const container = document.querySelector(".container");
 
@@ -110,12 +107,9 @@ function makeHtml(originalString) {
         str.insertAdjacentElement("beforeend", span);
     }
     for (let i = 0; i < originalString.length - 2; i++) {
-        let index = document.querySelector(`div.given-text span.span${i}`);
-        let afterIndex = document.querySelector(`div.given-text span.span${i + 1}`);
-        if (
-            index.getBoundingClientRect().top !=
-            afterIndex.getBoundingClientRect().top
-        ) {
+        let index = document.querySelector(`p.given-text span.span${i}`);
+        let afterIndex = document.querySelector(`p.given-text span.span${i + 1}`);
+        if (index.getBoundingClientRect().top != afterIndex.getBoundingClientRect().top) {
             totalLines++;
         }
     }
@@ -126,9 +120,16 @@ let firstWordLeft = document
     .getBoundingClientRect().left;
 let firstWordTop = document.querySelector(".span0").getBoundingClientRect().top;
 
-container.addEventListener("click", () => {
+typingArea.addEventListener("click", () => {
     input.focus();
+    console.log('input focused')
 });
+
+input.style.height = '0';
+input.style.width = '0';
+input.style.border = '0';
+input.style.padding = '0';
+
 document.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
         input.focus();
@@ -150,16 +151,16 @@ input.addEventListener("keydown", (e) => {
         let once = true;
         let top = false;
         let index = document.querySelector(
-            `div.given-text span.span${ptr.length - 1}`
+            `p.given-text span.span${ptr.length - 1}`
         );
         // remove notTyped class from all chars till the place where space was entered
         while (index.classList.contains("notTyped")) {
             if (once) {
                 let afterIndex = document.querySelector(
-                    `div.given-text span.span${ptr.length}`
+                    `p.given-text span.span${ptr.length}`
                 );
                 let beforeIndex = document.querySelector(
-                    `div.given-text span.span${ptr.length - 2}`
+                    `p.given-text span.span${ptr.length - 2}`
                 );
                 let beforeIndexTop = beforeIndex.getBoundingClientRect().top;
                 let afterIndexTop = afterIndex.getBoundingClientRect().top;
@@ -177,7 +178,7 @@ input.addEventListener("keydown", (e) => {
             index.innerText = originalString[ptr.length - 1];
             ptr = ptr.slice(0, -1);
             index = document.querySelector(
-                `div.given-text span.span${ptr.length - 1}`
+                `p.given-text span.span${ptr.length - 1}`
             );
             flag = true;
         }
@@ -206,10 +207,10 @@ input.addEventListener("keydown", (e) => {
         }
 
         let afterIndex = document.querySelector(
-            `div.given-text span.span${ptr.length}`
+            `p.given-text span.span${ptr.length}`
         );
         let beforeIndex = document.querySelector(
-            `div.given-text span.span${ptr.length - 2}`
+            `p.given-text span.span${ptr.length - 2}`
         );
         let beforeIndexTop = beforeIndex.getBoundingClientRect().top;
         let afterIndexTop = afterIndex.getBoundingClientRect().top;
@@ -238,7 +239,7 @@ input.addEventListener("input", (e) => {
         return;
     }
 
-    let index = document.querySelector(`div.given-text span.span${p.length - 1}`);
+    let index = document.querySelector(`p.given-text span.span${p.length - 1}`);
     if (backspaced) {
         backspaced = false;
         return;
@@ -257,7 +258,9 @@ input.addEventListener("input", (e) => {
     // if correct word is typed
     if (originalString[p.length - 1] === p[p.length - 1]) {
         index.classList.add("right");
+        console.log('correct')
     } else {
+        console.log('incorrect')
         // space is typed in b/w words
         if (p[p.length - 1] == " ") {
             input.value = input.value.slice(0, -1);
@@ -267,13 +270,13 @@ input.addEventListener("input", (e) => {
                 p += originalString[i];
                 input.value += originalString[i];
                 index = document.querySelector(
-                    `div.given-text span.span${p.length - 1}`
+                    `p.given-text span.span${p.length - 1}`
                 );
             }
             input.value += " ";
             index.classList.add("notTyped");
             let afterIndex = document.querySelector(
-                `div.given-text span.span${p.length}`
+                `p.given-text span.span${p.length}`
             );
             let afterIndexTop = afterIndex.getBoundingClientRect().top;
             if (index.getBoundingClientRect().top != afterIndexTop) {
@@ -290,7 +293,7 @@ input.addEventListener("input", (e) => {
         index.classList.add("wrong");
     }
     let afterIndex = document.querySelector(
-        `div.given-text span.span${p.length}`
+        `p.given-text span.span${p.length}`
     );
     let afterIndexTop = afterIndex.getBoundingClientRect().top;
     if (index.getBoundingClientRect().top != afterIndexTop) {
