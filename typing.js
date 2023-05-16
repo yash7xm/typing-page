@@ -70,8 +70,7 @@ typingArea.addEventListener('mouseleave', () => {
     mouseCaret.classList.add('mouseCaret');
 })
 
-
-
+//main script
 
 const str = document.querySelector(".given-text");
 const input = document.querySelector("#myInput");
@@ -92,6 +91,11 @@ let flag = false;
 let totalLines = 0;
 let a = 0;
 const stopWatch = document.createElement("div");
+
+let typedWords = 0;
+let correctWords = 0;
+let timerForScore = true;
+let cnt = 0;
 
 str.addEventListener('click', () => {
     input.focus();
@@ -115,9 +119,7 @@ function makeHtml(originalString) {
     }
 }
 
-let firstWordLeft = document
-    .querySelector(`.span0`)
-    .getBoundingClientRect().left;
+let firstWordLeft = document.querySelector(`.span0`).getBoundingClientRect().left;
 let firstWordTop = document.querySelector(".span0").getBoundingClientRect().top;
 
 typingArea.addEventListener("click", () => {
@@ -204,6 +206,7 @@ input.addEventListener("keydown", (e) => {
         }
         if (ptr.length == 1) {
             caret.style.left = "20px";
+            return;
         }
 
         let afterIndex = document.querySelector(
@@ -312,8 +315,7 @@ input.addEventListener("input", (e) => {
 });
 
 function moveCaret(index) {
-    let caretLeft =
-        index.getBoundingClientRect().left - firstWordLeft + 20 + index.getBoundingClientRect().width;
+    let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 20 + index.getBoundingClientRect().width;
     caret.style.left = `${caretLeft}px`;
     let caretTop = index.getBoundingClientRect().top - firstWordTop + 25;
     caret.style.top = `${caretTop}px`;
