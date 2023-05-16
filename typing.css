@@ -1,5 +1,5 @@
 :root {
-    --color-1: rgba(116, 112, 131);
+    --color-1: rgb(116, 112, 131);
     --color-2: #1e2345;
     --font-1: 'Space Grotesk', sans-serif;
 }
@@ -211,12 +211,13 @@ nav {
 
 .typing-area {
     height: 95%;
-    background-color: rgb(58, 58, 58);
+    background-color: rgba(0, 0, 0, 0.5);
     margin: 20px;
     border-radius: 5px;
     padding: 20px;
 }
 
+/* rgb(58, 58, 58) */
 .given-text {
     font-size: 1.5rem;
     line-height: 1.5em;
@@ -269,7 +270,8 @@ nav {
 }
 
 #myInput {
-    display: none;
+    position: absolute;
+    left: -9999px;
 }
 
 /* hover effects */
@@ -284,7 +286,7 @@ nav {
     content: 'Access Notes';
     display: block;
     position: absolute;
-    background-color: black;
+    background-color: rgb(80, 80, 80);
     color: white;
     padding: 15px;
     white-space: nowrap;
@@ -303,7 +305,7 @@ nav {
     content: 'Start New';
     display: block;
     position: absolute;
-    background-color: black;
+    background-color: rgb(80, 80, 80);
     color: white;
     padding: 15px;
     white-space: nowrap;
@@ -321,7 +323,7 @@ nav {
     content: 'Provide Your Own Text';
     display: block;
     position: absolute;
-    background-color: black;
+    background-color: rgb(80, 80, 80);
     color: white;
     padding: 15px;
     white-space: nowrap;
@@ -332,8 +334,10 @@ nav {
     margin-top: 5px;
     border-radius: 5px;
     border: 1px solid white;
-    font-size: 0.8rem;          
+    font-size: 0.8rem;
 }
+
+/* #1B3680 */
 
 /* caret */
 
