@@ -78,15 +78,15 @@ const caret = document.querySelector(".caret");
 const timerSet = document.querySelectorAll(".timer-options>li");
 const time = document.querySelector(".fa-clock");
 
-const originalString = str.textContent.replace(/\s+/g, " ").trim();
+const originalString = str.textContent.replace(/\s+/g, " ").trim(); // trimming not needed spaces
 
-let clock = 0;
-let clockActive = false;
-let liActiveValue = 0;
-let inputStarted = false;
-let clockHover = false;
+let clock = 0; // for clock-timer to display in live-time
+let clockActive = false; // clock clicked or not
+let liActiveValue = 0; // particular time selected or not
+let inputStarted = false; // user started inputing and now can't click clock or li
+let clockHover = false; // to reapply hover effect on clock
 
-let intervalId = null;
+let intervalId = null; // to terminate timer and stop cnt
 
 const stopWatch = document.querySelector('.live-time>div>p');
 const score = document.querySelector('.score>p>span');
@@ -96,12 +96,15 @@ const afterText = document.querySelector('#after-text');
 
 let typedWords = 0;
 let correctWords = 0;
-let timerForScore = true;
-let cnt = 0;
-let currentWordTyping = 0;
 let TotalWords = 1;
 totalWordsInText(originalString);
-let ended = false;
+let currentWordTyping = 0; // to check number of current typing word, helping in if space is typed in last word, to end it
+let timerForScore = true; // to start normal timer and cnt when input started typing
+let cnt = 0; // timer count
+let ended = false; // to check if process already ended and prevent live timer to end it
+let normalTimer = true; // to check if clock is active or start normal timer count
+let S = 0; // for score
+let A = 0; // for accuracy
 
 let backspaced = false;
 let line = 0;
@@ -123,6 +126,7 @@ document.addEventListener("keydown", function (event) {
     }
 });
 
+// hiding input
 input.style.height = '0';
 input.style.width = '0';
 input.style.border = '0';
@@ -248,8 +252,9 @@ input.addEventListener("input", (e) => {
     }
 
     if (input.value.length > 0 && clockActive == true && clock != 0) {
-        inputStarted = true;
+        // inputStarted = true;
         clockActive = false;
+        normalTimer = false;
         startTimerForClock();
     }
 
@@ -310,20 +315,7 @@ input.addEventListener("input", (e) => {
             //     moveCaret(index);
             // }
             if (currentWordTyping >= TotalWords) {
-                clearInterval(intervalId);
-                input.disabled = true;
-                Words();
-                console.log(typedWords)
-                console.log(correctWords)
-                score.textContent = `${(correctWords / (cnt / 60)).toFixed(2)} wpm`;
-                accuracy.textContent = `${(((correctWords / (cnt / 60)) * 100) / (typedWords / (cnt / 60))).toFixed(2)} %`;
-                timeSpent.textContent = `${(cnt / 60).toFixed(2)} min`;
-                typingArea.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
-                str.style.opacity = '0.3';
-                caret.style.display = 'none';
-                info();
-                afterText.classList.remove('hidden');
-
+                final();
                 ended = true;
                 return;
             }
@@ -347,38 +339,24 @@ input.addEventListener("input", (e) => {
     // caret.style.animationName = "none";
 
     if (input.value.length >= originalString.length) {
-        clearInterval(intervalId);
-        input.disabled = true;
-        Words();
-        console.log(typedWords)
-        console.log(correctWords)
-        score.textContent = `${(correctWords / (cnt / 60)).toFixed(2)} wpm`;
-        accuracy.textContent = `${(((correctWords / (cnt / 60)) * 100) / (typedWords / (cnt / 60))).toFixed(2)} %`;
-        timeSpent.textContent = `${(cnt / 60).toFixed(2)} min`;
-        typingArea.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
-        str.style.opacity = '0.3';
-        caret.style.display = 'none';
-        info();
-        afterText.classList.remove('hidden');
-
+        final();
         ended = true;
         return;
     }
 });
 
 
+// for timer activation
 time.addEventListener('click', () => {
     if (inputStarted === false) {
         if (clockActive === false) {
             time.style.color = "#ffd700";
             clockActive = true;
             clockHover = false;
-            // clockFlag = true;
         }
         else {
             time.style.color = 'rgb(116, 112, 131)';
             clockActive = false;
-            // clockFlag = false;
             clock = 0;
             clockHover = true;
             timerSet.forEach((item) => {
@@ -388,7 +366,7 @@ time.addEventListener('click', () => {
     }
 });
 
-// to fix hover effect
+// to fix hover effect of clock
 time.addEventListener('mouseover', () => {
     if (clockHover === true)
         time.style.color = 'white';
@@ -398,6 +376,7 @@ time.addEventListener('mouseout', () => {
         time.style.color = 'rgb(116, 112, 131)';
 })
 
+// to select particular time
 timerSet.forEach((item) => {
     item.addEventListener("click", () => {
         if (inputStarted === false) {
@@ -414,6 +393,7 @@ timerSet.forEach((item) => {
     });
 });
 
+// timer for clock, for selected time
 function startTimerForClock() {
     setTimeout(() => {
         if (ended === true) {
@@ -421,27 +401,20 @@ function startTimerForClock() {
         }
         clock--;
         stopWatch.innerText = clock;
+        // if (clock === 3 || clock === 2 || clock === 1) {
+        //     stopWatch.classList.add('liveTimeEffects')
+        // }
+        // stopWatch.classList.remove('liveTimeEffects')
         if (clock != 0) startTimerForClock();
         else {
             if (ended === false) {
-                clearInterval(intervalId);
-                input.disabled = true;
-                Words();
-                console.log(typedWords)
-                console.log(correctWords)
-                score.textContent = `${(correctWords / (cnt / 60)).toFixed(2)} wpm`;
-                accuracy.textContent = `${(((correctWords / (cnt / 60)) * 100) / (typedWords / (cnt / 60))).toFixed(2)} %`;
-                timeSpent.textContent = `${(cnt / 60).toFixed(2)} min`;
-                typingArea.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
-                str.style.opacity = '0.3';
-                caret.style.display = 'none';
-                info();
-                afterText.classList.remove('hidden');
+                final();
             }
         }
     }, 1000);
 }
 
+// total words count
 function totalWordsInText(originalString) {
     for (let i = 0; i < originalString.length; i++) {
         if (originalString[i] === ' ')
@@ -449,8 +422,10 @@ function totalWordsInText(originalString) {
     }
 }
 
+// to calculate words typed and correct
 function Words() {
     input.value = input.value.replace(/\s+/g, " ").trim();
+    // typed words
     let toCheckFirstWord = true;
     let toCheckOtherWords = false;
     for (let i = 0; i < input.value.length; i++) {
@@ -482,21 +457,22 @@ function Words() {
         }
         if (flag === true && i + 1 === input.value.length && originalString[i + 1] === ' ')
             correctWords++;
-        if (flag === true && i+1 === originalString.length)
+        if (flag === true && i + 1 === originalString.length)
             correctWords++;
     }
 }
 
+// to calculate scores and display live-time also
 function timer() {
     intervalId = setInterval(() => {
         cnt++;
+        if (normalTimer)
+            stopWatch.innerText = cnt;
     }, 1000);
 }
 
+// for displaying different texts
 function info() {
-    const S = (correctWords / (cnt / 60)).toFixed(2);
-    const A = (((correctWords / (cnt / 60)) * 100) / (typedWords / (cnt / 60))).toFixed(2);
-
     if (S >= 60) {
         if (A === 100)
             afterText.textContent = 'Perfect Score!';
@@ -507,7 +483,7 @@ function info() {
         else
             afterText.textContent = 'Keep Practicing!'
     }
-    else if (S >= 40 && S<60) {
+    else if (S >= 40 && S < 60) {
         if (A === 100)
             afterText.textContent = 'Great Work!';
         else if (A >= 90)
@@ -517,7 +493,7 @@ function info() {
         else
             afterText.textContent = 'Keep Practicing!'
     }
-    else{
+    else {
         if (A === 100)
             afterText.textContent = 'Well Done!';
         else if (A >= 90)
@@ -527,6 +503,25 @@ function info() {
         else
             afterText.textContent = 'You Can Do Better!'
     }
+}
+
+// to calculate scores and terminate everything
+function final() {
+    clearInterval(intervalId);
+    input.disabled = true;
+    Words();
+    S = (correctWords / (cnt / 60)).toFixed(2);
+    A = (((correctWords / (cnt / 60)) * 100) / (typedWords / (cnt / 60))).toFixed(2);
+    // console.log(typedWords)
+    // console.log(correctWords)
+    score.textContent = `${S} wpm`;
+    accuracy.textContent = `${A} %`;
+    timeSpent.textContent = `${(cnt / 60).toFixed(2)} min`;
+    typingArea.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
+    str.style.opacity = '0.3';
+    caret.style.display = 'none';
+    info();
+    afterText.classList.remove('hidden');
 }
 
 
