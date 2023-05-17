@@ -240,6 +240,7 @@ input.addEventListener("keydown", (e) => {
 
 // handling the input
 input.addEventListener("input", (e) => {
+    inputStarted = true;
     let p = input.value;
 
     if (p.length < 1) {
@@ -312,12 +313,15 @@ input.addEventListener("input", (e) => {
                 clearInterval(intervalId);
                 input.disabled = true;
                 Words();
+                console.log(typedWords)
+                console.log(correctWords)
                 score.textContent = `${(correctWords / (cnt / 60)).toFixed(2)} wpm`;
                 accuracy.textContent = `${(((correctWords / (cnt / 60)) * 100) / (typedWords / (cnt / 60))).toFixed(2)} %`;
                 timeSpent.textContent = `${(cnt / 60).toFixed(2)} min`;
                 typingArea.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
                 str.style.opacity = '0.3';
-                caret.style.opacity = '0.3';
+                caret.style.display = 'none';
+                info();
                 afterText.classList.remove('hidden');
 
                 ended = true;
@@ -343,16 +347,18 @@ input.addEventListener("input", (e) => {
     // caret.style.animationName = "none";
 
     if (input.value.length >= originalString.length) {
-        console.log(cnt)
         clearInterval(intervalId);
         input.disabled = true;
         Words();
+        console.log(typedWords)
+        console.log(correctWords)
         score.textContent = `${(correctWords / (cnt / 60)).toFixed(2)} wpm`;
         accuracy.textContent = `${(((correctWords / (cnt / 60)) * 100) / (typedWords / (cnt / 60))).toFixed(2)} %`;
         timeSpent.textContent = `${(cnt / 60).toFixed(2)} min`;
         typingArea.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
         str.style.opacity = '0.3';
-        caret.style.opacity = '0.3';
+        caret.style.display = 'none';
+        info();
         afterText.classList.remove('hidden');
 
         ended = true;
@@ -410,7 +416,7 @@ timerSet.forEach((item) => {
 
 function startTimerForClock() {
     setTimeout(() => {
-        if(ended === true){
+        if (ended === true) {
             return;
         }
         clock--;
@@ -418,19 +424,19 @@ function startTimerForClock() {
         if (clock != 0) startTimerForClock();
         else {
             if (ended === false) {
-                console.log(cnt);
                 clearInterval(intervalId);
                 input.disabled = true;
                 Words();
+                console.log(typedWords)
+                console.log(correctWords)
                 score.textContent = `${(correctWords / (cnt / 60)).toFixed(2)} wpm`;
                 accuracy.textContent = `${(((correctWords / (cnt / 60)) * 100) / (typedWords / (cnt / 60))).toFixed(2)} %`;
                 timeSpent.textContent = `${(cnt / 60).toFixed(2)} min`;
                 typingArea.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
                 str.style.opacity = '0.3';
-                caret.style.opacity = '0.3';
+                caret.style.display = 'none';
+                info();
                 afterText.classList.remove('hidden');
-                // console.log(correctWords)
-                // console.log(typedWords)
             }
         }
     }, 1000);
@@ -446,17 +452,22 @@ function totalWordsInText(originalString) {
 function Words() {
     input.value = input.value.replace(/\s+/g, " ").trim();
     let toCheckFirstWord = true;
+    let toCheckOtherWords = false;
     for (let i = 0; i < input.value.length; i++) {
+        if (toCheckOtherWords === true)
+            toCheckFirstWord = true;
         if (input.value[i] === ' ') {
             typedWords++;
             toCheckFirstWord = false;
+            toCheckOtherWords = true;
         }
     }
-    if (toCheckFirstWord === true)
+    if (toCheckFirstWord === true && input.value.length < originalString.length)
         typedWords++;
     if (input.value.length >= originalString.length)
         typedWords++;
 
+    // correct words
     let flag = true;
     for (let i = 0; i < input.value.length; i++) {
         let index = document.querySelector(`p.given-text span.span${i}`)
@@ -469,7 +480,9 @@ function Words() {
         if (flag === false && input.value[i] === ' ') {
             flag = true;
         }
-        if (flag === true && i + 1 === input.value.length)
+        if (flag === true && i + 1 === input.value.length && originalString[i + 1] === ' ')
+            correctWords++;
+        if (flag === true && i+1 === originalString.length)
             correctWords++;
     }
 }
@@ -478,6 +491,42 @@ function timer() {
     intervalId = setInterval(() => {
         cnt++;
     }, 1000);
+}
+
+function info() {
+    const S = (correctWords / (cnt / 60)).toFixed(2);
+    const A = (((correctWords / (cnt / 60)) * 100) / (typedWords / (cnt / 60))).toFixed(2);
+
+    if (S >= 60) {
+        if (A === 100)
+            afterText.textContent = 'Perfect Score!';
+        else if (A >= 90)
+            afterText.textContent = 'Great Work!';
+        else if (A >= 50 && A < 90)
+            afterText.textContent = 'Good Effort!';
+        else
+            afterText.textContent = 'Keep Practicing!'
+    }
+    else if (S >= 40 && S<60) {
+        if (A === 100)
+            afterText.textContent = 'Great Work!';
+        else if (A >= 90)
+            afterText.textContent = 'Well Done!';
+        else if (A >= 50 && A < 90)
+            afterText.textContent = 'Good Effort!';
+        else
+            afterText.textContent = 'Keep Practicing!'
+    }
+    else{
+        if (A === 100)
+            afterText.textContent = 'Well Done!';
+        else if (A >= 90)
+            afterText.textContent = 'Good Effort!';
+        else if (A >= 50 && A < 90)
+            afterText.textContent = 'Keep Practicing!';
+        else
+            afterText.textContent = 'You Can Do Better!'
+    }
 }
 
 
