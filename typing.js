@@ -74,32 +74,59 @@ typingArea.addEventListener('mouseleave', () => {
 
 const str = document.querySelector(".given-text");
 const input = document.querySelector("#myInput");
-const timerSet = document.querySelectorAll("li");
-const watch = document.querySelector(".timer");
-const time = document.querySelector(".fa-clock");
 const caret = document.querySelector(".caret");
-const container = document.querySelector(".container");
+const timerSet = document.querySelectorAll(".timer-options>li");
+const time = document.querySelector(".fa-clock");
 
 const originalString = str.textContent.replace(/\s+/g, " ").trim();
 
 let clock = 0;
-let clockFlag = false;
-let backspaced = false;
-let line = 0;
-let scrollDistance = 0;
-let flag = false;
-let totalLines = 0;
-let a = 0;
-const stopWatch = document.createElement("div");
+let clockActive = false;
+let liActiveValue = 0;
+let inputStarted = false;
+let clockHover = false;
+
+let intervalId = null;
+
+const stopWatch = document.querySelector('.live-time>div>p');
+const score = document.querySelector('.score>p>span');
+const accuracy = document.querySelector('.accuracy>p>span');
+const timeSpent = document.querySelector('.time-spent>p>span');
+const afterText = document.querySelector('#after-text');
 
 let typedWords = 0;
 let correctWords = 0;
 let timerForScore = true;
 let cnt = 0;
+let currentWordTyping = 0;
+let TotalWords = 1;
+totalWordsInText(originalString);
+let ended = false;
+
+let backspaced = false;
+let line = 0;
+let scrollDistance = 0;
+let flag = false;
+let totalLines = 0;
 
 str.addEventListener('click', () => {
     input.focus();
 })
+
+// typingArea.addEventListener("click", () => {
+//     input.focus();
+// });
+
+document.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+        input.focus();
+    }
+});
+
+input.style.height = '0';
+input.style.width = '0';
+input.style.border = '0';
+input.style.padding = '0';
 
 makeHtml(originalString);
 function makeHtml(originalString) {
@@ -121,22 +148,6 @@ function makeHtml(originalString) {
 
 let firstWordLeft = document.querySelector(`.span0`).getBoundingClientRect().left;
 let firstWordTop = document.querySelector(".span0").getBoundingClientRect().top;
-
-typingArea.addEventListener("click", () => {
-    input.focus();
-    console.log('input focused')
-});
-
-input.style.height = '0';
-input.style.width = '0';
-input.style.border = '0';
-input.style.padding = '0';
-
-document.addEventListener("keydown", function (event) {
-    if (event.key === "Enter") {
-        input.focus();
-    }
-});
 
 // doing backspacing
 input.addEventListener("keydown", (e) => {
@@ -188,10 +199,10 @@ input.addEventListener("keydown", (e) => {
             // only if above loop ran
             input.value = ptr;
             input.value += originalString[ptr.length - 1];
-            let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 20 + index.getBoundingClientRect().width;
+            let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 35 + index.getBoundingClientRect().width;
             caret.style.left = `${caretLeft}px`;
             if (!top) {
-                let caretTop = index.getBoundingClientRect().top - firstWordTop + 25;
+                let caretTop = index.getBoundingClientRect().top - firstWordTop + 35;
                 caret.style.top = `${caretTop}px`;
             }
             flag = false;
@@ -199,13 +210,13 @@ input.addEventListener("keydown", (e) => {
         } else {
             index.classList.remove("right");
             index.classList.remove("wrong");
-            let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 20;
+            let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 35;
             caret.style.left = `${caretLeft}px`;
-            let caretTop = index.getBoundingClientRect().top - firstWordTop + 25;
+            let caretTop = index.getBoundingClientRect().top - firstWordTop + 35;
             caret.style.top = `${caretTop}px`;
         }
         if (ptr.length == 1) {
-            caret.style.left = "20px";
+            caret.style.left = "35px";
             return;
         }
 
@@ -229,17 +240,21 @@ input.addEventListener("keydown", (e) => {
 
 // handling the input
 input.addEventListener("input", (e) => {
-    if (input.value.length > 0 && clockFlag == true && clock != 0) {
-        clockFlag = false;
-        watch.innerHTML = "";
-        stopWatch.classList.add("watch");
-        stopWatch.innerText = clock;
-        watch.append(stopWatch);
-        startTimer();
-    }
     let p = input.value;
+
     if (p.length < 1) {
         return;
+    }
+
+    if (input.value.length > 0 && clockActive == true && clock != 0) {
+        inputStarted = true;
+        clockActive = false;
+        startTimerForClock();
+    }
+
+    if (input.value.length > 0 && timerForScore === true) {
+        timerForScore = false;
+        timer();
     }
 
     let index = document.querySelector(`p.given-text span.span${p.length - 1}`);
@@ -261,31 +276,52 @@ input.addEventListener("input", (e) => {
     // if correct word is typed
     if (originalString[p.length - 1] === p[p.length - 1]) {
         index.classList.add("right");
-        console.log('correct')
-    } else {
-        console.log('incorrect')
+        if (p[p.length - 1] === ' ')
+            currentWordTyping++;
+    }
+    else {
         // space is typed in b/w words
         if (p[p.length - 1] == " ") {
+            currentWordTyping++;
             input.value = input.value.slice(0, -1);
             for (let i = p.length - 1; i < originalString.length; i++) {
                 if (originalString[p.length - 1] == " ") break;
                 index.classList.add("notTyped");
-                p += originalString[i];
-                input.value += originalString[i];
+                if (p.length < originalString.length)
+                    p += originalString[i];
+                if (input.value.length < originalString.length)
+                    input.value += originalString[i];
                 index = document.querySelector(
                     `p.given-text span.span${p.length - 1}`
                 );
             }
-            input.value += " ";
-            index.classList.add("notTyped");
-            let afterIndex = document.querySelector(
-                `p.given-text span.span${p.length}`
-            );
-            let afterIndexTop = afterIndex.getBoundingClientRect().top;
-            if (index.getBoundingClientRect().top != afterIndexTop) {
-                moveCaretDown(afterIndex, index);
-            } else {
-                moveCaret(index);
+            if (input.value.length < originalString.length)
+                input.value += " ";
+            if (index)
+                index.classList.add("notTyped");
+            // let afterIndex = document.querySelector(
+            //     `p.given-text span.span${p.length}`
+            // );
+            // let afterIndexTop = afterIndex.getBoundingClientRect().top;
+            // if (index.getBoundingClientRect().top != afterIndexTop) {
+            //     moveCaretDown(afterIndex, index);
+            // } else {
+            //     moveCaret(index);
+            // }
+            if (currentWordTyping >= TotalWords) {
+                clearInterval(intervalId);
+                input.disabled = true;
+                Words();
+                score.textContent = `${(correctWords / (cnt / 60)).toFixed(2)} wpm`;
+                accuracy.textContent = `${(((correctWords / (cnt / 60)) * 100) / (typedWords / (cnt / 60))).toFixed(2)} %`;
+                timeSpent.textContent = `${(cnt / 60).toFixed(2)} min`;
+                typingArea.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
+                str.style.opacity = '0.3';
+                caret.style.opacity = '0.3';
+                afterText.classList.remove('hidden');
+
+                ended = true;
+                return;
             }
             return;
         }
@@ -298,35 +334,169 @@ input.addEventListener("input", (e) => {
     let afterIndex = document.querySelector(
         `p.given-text span.span${p.length}`
     );
-    let afterIndexTop = afterIndex.getBoundingClientRect().top;
-    if (index.getBoundingClientRect().top != afterIndexTop) {
-        moveCaretDown(afterIndex, index);
-    } else {
-        moveCaret(index);
-    }
+    // let afterIndexTop = afterIndex.getBoundingClientRect().top;
+    // if (index.getBoundingClientRect().top != afterIndexTop) {
+    //     moveCaretDown(afterIndex, index);
+    // } else {
+    //     moveCaret(index);
+    // }
+    // caret.style.animationName = "none";
 
-    caret.style.animationName = "none";
-    if (p.length === originalString.length) {
+    if (input.value.length >= originalString.length) {
+        console.log(cnt)
+        clearInterval(intervalId);
         input.disabled = true;
-        over = true;
-        score();
+        Words();
+        score.textContent = `${(correctWords / (cnt / 60)).toFixed(2)} wpm`;
+        accuracy.textContent = `${(((correctWords / (cnt / 60)) * 100) / (typedWords / (cnt / 60))).toFixed(2)} %`;
+        timeSpent.textContent = `${(cnt / 60).toFixed(2)} min`;
+        typingArea.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
+        str.style.opacity = '0.3';
+        caret.style.opacity = '0.3';
+        afterText.classList.remove('hidden');
+
+        ended = true;
         return;
     }
 });
 
+
+time.addEventListener('click', () => {
+    if (inputStarted === false) {
+        if (clockActive === false) {
+            time.style.color = "#ffd700";
+            clockActive = true;
+            clockHover = false;
+            // clockFlag = true;
+        }
+        else {
+            time.style.color = 'rgb(116, 112, 131)';
+            clockActive = false;
+            // clockFlag = false;
+            clock = 0;
+            clockHover = true;
+            timerSet.forEach((item) => {
+                item.style.color = 'rgb(116, 112, 131)';
+            })
+        }
+    }
+});
+
+// to fix hover effect
+time.addEventListener('mouseover', () => {
+    if (clockHover === true)
+        time.style.color = 'white';
+});
+time.addEventListener('mouseout', () => {
+    if (clockHover === true)
+        time.style.color = 'rgb(116, 112, 131)';
+})
+
+timerSet.forEach((item) => {
+    item.addEventListener("click", () => {
+        if (inputStarted === false) {
+            if (clockActive && clock === 0) {
+                item.style.color = "#ffd700";
+                clock = item.getAttribute("value");
+                liActiveValue = item.getAttribute("value");
+            }
+            else if (clockActive && liActiveValue === item.getAttribute("value")) {
+                item.style.color = 'rgb(116, 112, 131)';
+                clock = 0;
+            }
+        }
+    });
+});
+
+function startTimerForClock() {
+    setTimeout(() => {
+        if(ended === true){
+            return;
+        }
+        clock--;
+        stopWatch.innerText = clock;
+        if (clock != 0) startTimerForClock();
+        else {
+            if (ended === false) {
+                console.log(cnt);
+                clearInterval(intervalId);
+                input.disabled = true;
+                Words();
+                score.textContent = `${(correctWords / (cnt / 60)).toFixed(2)} wpm`;
+                accuracy.textContent = `${(((correctWords / (cnt / 60)) * 100) / (typedWords / (cnt / 60))).toFixed(2)} %`;
+                timeSpent.textContent = `${(cnt / 60).toFixed(2)} min`;
+                typingArea.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
+                str.style.opacity = '0.3';
+                caret.style.opacity = '0.3';
+                afterText.classList.remove('hidden');
+                // console.log(correctWords)
+                // console.log(typedWords)
+            }
+        }
+    }, 1000);
+}
+
+function totalWordsInText(originalString) {
+    for (let i = 0; i < originalString.length; i++) {
+        if (originalString[i] === ' ')
+            TotalWords++;
+    }
+}
+
+function Words() {
+    input.value = input.value.replace(/\s+/g, " ").trim();
+    let toCheckFirstWord = true;
+    for (let i = 0; i < input.value.length; i++) {
+        if (input.value[i] === ' ') {
+            typedWords++;
+            toCheckFirstWord = false;
+        }
+    }
+    if (toCheckFirstWord === true)
+        typedWords++;
+    if (input.value.length >= originalString.length)
+        typedWords++;
+
+    let flag = true;
+    for (let i = 0; i < input.value.length; i++) {
+        let index = document.querySelector(`p.given-text span.span${i}`)
+        if ((input.value[i] !== originalString[i] && input.value[i] !== ' ') || index.classList.contains('notTyped')) {
+            flag = false;
+        }
+        if (flag === true && input.value[i] === ' ' && input.value[i] === originalString[i]) {
+            correctWords++;
+        }
+        if (flag === false && input.value[i] === ' ') {
+            flag = true;
+        }
+        if (flag === true && i + 1 === input.value.length)
+            correctWords++;
+    }
+}
+
+function timer() {
+    intervalId = setInterval(() => {
+        cnt++;
+    }, 1000);
+}
+
+
+
+
+
+
 function moveCaret(index) {
-    let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 20 + index.getBoundingClientRect().width;
+    let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 35 + index.getBoundingClientRect().width;
     caret.style.left = `${caretLeft}px`;
-    let caretTop = index.getBoundingClientRect().top - firstWordTop + 25;
+    let caretTop = index.getBoundingClientRect().top - firstWordTop + 35;
     caret.style.top = `${caretTop}px`;
 }
 
 function moveCaretDown(afterIndex, index) {
     line++;
-    console.log(line);
-    let caretLeft = 20;
+    let caretLeft = 35;
     caret.style.left = `${caretLeft}px`;
-    let caretTop = afterIndex.getBoundingClientRect().top - firstWordTop + 25;
+    let caretTop = afterIndex.getBoundingClientRect().top - firstWordTop + 35;
     caret.style.top = `${caretTop}px`;
     if (line > 2) {
         if (line == 3) scrollDistance = 55;
@@ -341,9 +511,9 @@ function moveCaretDown(afterIndex, index) {
 
 function moveCaretBack(index) {
     if (line != 0) line--;
-    let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 20;
+    let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 35;
     caret.style.left = `${caretLeft}px`;
-    let caretTop = index.getBoundingClientRect().top - firstWordTop + 25;
+    let caretTop = index.getBoundingClientRect().top - firstWordTop + 35;
     caret.style.top = `${caretTop}px`;
     if (line >= 2) {
         if (line == 2) scrollDistance = 18;
@@ -354,35 +524,4 @@ function moveCaretBack(index) {
             container.scrollTop = scrollDistance;
         }
     }
-}
-
-time.addEventListener("click", () => {
-    if (a > 1) a = 0;
-    if (a % 2 == 0) {
-        time.style.color = "#ffd700";
-        clockFlag = true;
-    } else {
-        time.style.color = "white";
-        clockFlag = false;
-    }
-    a++;
-    console.log('time');
-});
-
-timerSet.forEach((item) => {
-    item.addEventListener("click", () => {
-        if (clockFlag) {
-            item.style.color = "#ffd700";
-            clock = item.getAttribute("value");
-        }
-    });
-});
-
-function startTimer() {
-    setTimeout(() => {
-        clock--;
-        console.log(clock);
-        stopWatch.innerText = clock;
-        if (clock != 0) startTimer();
-    }, 1000);
 }
