@@ -1,4 +1,4 @@
-// caret
+// mouse caret
 const mouseCaret = document.querySelector('.mouseCaret');
 const navLinks = document.querySelectorAll('nav .grow-link');
 const borderLinks = document.querySelectorAll('.border-link');
@@ -93,6 +93,46 @@ const score = document.querySelector('.score>p>span');
 const accuracy = document.querySelector('.accuracy>p>span');
 const timeSpent = document.querySelector('.time-spent>p>span');
 const afterText = document.querySelector('#after-text');
+
+
+// const capsLockIndicator = document.querySelector('.caps-lock');
+
+// document.addEventListener('keydown', function () {
+//     if (event.getModifierState('CapsLock')) {
+//         console.log('Caps Lock is initially on.');
+//     } else {
+//         console.log('Caps Lock is initially off.');
+//     }
+// });
+
+// document.addEventListener('keydown', () => {
+
+// });
+
+
+
+// document.addEventListener('DOMContentLoaded', function () {
+//     let capsLockIndicator = document.querySelector('.caps-lock');
+//     let capsLockOn = false; // Variable to track the Caps Lock state
+
+//     function checkCapsLock(event) {
+//         let capsLockPressed = event.getModifierState && event.getModifierState('CapsLock'); // true or false
+//         if (capsLockPressed !== capsLockOn) {
+//             capsLockOn = capsLockPressed;
+//             capsLockIndicator.style.visibility = capsLockOn ? 'visible' : 'hidden';
+//         }
+//     }
+
+//     // Check Caps Lock state on page load
+//     capsLockOn = navigator.getKeyboardState && navigator.getKeyboardState().getModifierState('CapsLock');
+//     capsLockIndicator.style.visibility = capsLockOn ? 'visible' : 'hidden';
+
+//     document.addEventListener('keydown', checkCapsLock);
+//     document.addEventListener('keyup', checkCapsLock);
+// });
+
+
+
 
 let typedWords = 0;
 let correctWords = 0;
@@ -244,6 +284,11 @@ input.addEventListener("keydown", (e) => {
 
 // handling the input
 input.addEventListener("input", (e) => {
+    if (clockActive && clock === 0) {  // to prevent when only clock is selected but no time
+        input.value = input.value.slice(0, -1);
+        return;
+    }
+
     inputStarted = true;
     let p = input.value;
 
@@ -358,6 +403,7 @@ time.addEventListener('click', () => {
             time.style.color = 'rgb(116, 112, 131)';
             clockActive = false;
             clock = 0;
+            stopWatch.innerText = clock;
             clockHover = true;
             timerSet.forEach((item) => {
                 item.style.color = 'rgb(116, 112, 131)';
@@ -384,10 +430,12 @@ timerSet.forEach((item) => {
                 item.style.color = "#ffd700";
                 clock = item.getAttribute("value");
                 liActiveValue = item.getAttribute("value");
+                stopWatch.innerText = clock;
             }
             else if (clockActive && liActiveValue === item.getAttribute("value")) {
                 item.style.color = 'rgb(116, 112, 131)';
                 clock = 0;
+                stopWatch.innerText = clock;
             }
         }
     });
@@ -401,10 +449,10 @@ function startTimerForClock() {
         }
         clock--;
         stopWatch.innerText = clock;
-        // if (clock === 3 || clock === 2 || clock === 1) {
-        //     stopWatch.classList.add('liveTimeEffects')
-        // }
-        // stopWatch.classList.remove('liveTimeEffects')
+        stopWatch.classList.remove('liveTimeEffects')
+        if (clock === 3 || clock === 2 || clock === 1) {
+            stopWatch.classList.add('liveTimeEffects')
+        }
         if (clock != 0) startTimerForClock();
         else {
             if (ended === false) {
