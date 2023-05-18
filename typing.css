@@ -22,12 +22,18 @@ body {
     overflow: hidden;
 }
 
+
+@media (max-height: 700px) {
+    body {
+        overflow: auto;
+    }
+}   
+
 .content {
     display: flex;
     height: 100%;
     overflow: hidden;
     flex-direction: row;
-    height: 100%;
 }
 
 .left {
@@ -115,15 +121,19 @@ nav {
 .timer {
     border-right: 1px solid var(--color-2);
     border-bottom: 1px solid var(--color-2);
-    text-align: center;
     height: 25%;
+}
+
+.clock {
+    width: 60%;
+    margin: auto;
+    padding: 20px;
 }
 
 .time {
     color: var(--color-1);
     background-color: transparent;
     border: none;
-    margin: 20px auto;
     cursor: pointer;
     width: max-content;
     font-size: 2.5rem;
@@ -200,7 +210,25 @@ nav {
     width: max-content;
     font-size: 3.5rem;
     font-family: var(--font-1);
-    margin: auto;
+    padding: 20px;
+}
+
+.liveTimeEffects {
+    animation: enlarge 1s ease infinite;
+}
+
+@keyframes enlarge {
+    0% {
+        font-size: 3.5rem;
+    }
+
+    50% {
+        font-size: 5rem;
+    }
+
+    100% {
+        font-size: 3.5rem;
+    }
 }
 
 /* text */
@@ -210,11 +238,44 @@ nav {
 }
 
 .typing-area {
-    height: 95%;
+    position: relative;
+    height: 94%;
     background-color: rgba(0, 0, 0, 0.5);
     margin: 20px;
     border-radius: 5px;
-    padding: 20px;
+    padding: 35px;
+    overflow-y: auto;
+}
+
+.typing-area::-webkit-scrollbar {
+    background-color: transparent;
+    width: 8px;
+}
+
+/* .typing-area::-webkit-scrollbar-track {
+    background-color: #050a18;
+} */
+
+.typing-area::-webkit-scrollbar-thumb {
+    background-color: var(--color-1);
+    border-radius: 5px;
+}
+
+#after-text {
+    position: absolute;
+    width: max-content;
+    color: white;
+    font-size: 3.5rem;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+    font-family: var(--font-1);
+    transform: translate(-50%, -50%);
+    opacity: 0.9;
+}
+
+.hidden {
+    display: none;
 }
 
 /* rgb(58, 58, 58) */
@@ -232,11 +293,11 @@ nav {
 }
 
 .given-text span.right {
-    color: #2ECC40;
+    color: green;
 }
 
 .given-text span.wrong {
-    color: #FF4136;
+    color: red;
 }
 
 .given-text span.notTyped {
@@ -249,8 +310,8 @@ nav {
     width: 2px;
     height: 1.5em;
     position: absolute;
-    background-color: #b91d73;
-    left: 20px;
+    background-color: white;
+    left: 35px;
     transition: all 0.125s ease 0s;
     margin: 0;
     padding: 0;
@@ -339,7 +400,7 @@ nav {
 
 /* #1B3680 */
 
-/* caret */
+/* mouse caret */
 
 .mouseCaret {
     position: absolute;
@@ -382,3 +443,18 @@ nav {
     width: 0.5rem;
     border-radius: 50%;
 }
+
+/* caps lock */
+
+.caps-lock {
+    color: red;
+    font-size: 1.1rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 2px;
+    font-weight: bold;
+    visibility: hidden;
+}
+
+/* scrollbar */
