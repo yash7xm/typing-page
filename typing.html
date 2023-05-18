@@ -36,18 +36,20 @@
             </div>
         </div>
         <div class="profile">
-            <a href="" class="profile-link border-link"><i class="fa-solid fa-user"></i></a>
+            <a href="" class="profile-link border-link"><i class="fa-solid fa-user"></i> register</a>
         </div>
     </nav>
 
     <div class="content">
         <div class="left">
             <div class="timer">
-                <button class="time border-link"><i class="fa-solid fa-clock"></i></button>
+                <div class="clock">
+                    <button class="time border-link"><i class="fa-solid fa-clock"></i></button>
+                </div>
                 <ul class="timer-options">
+                    <li class="grow-link" value="10">10</li>
                     <li class="grow-link" value="30">30</li>
                     <li class="grow-link" value="60">60</li>
-                    <li class="grow-link" value="90">90</li>
                     <li class="grow-link" value="120">120</li>
                 </ul>
             </div>
@@ -55,13 +57,13 @@
             <div class="result">
                 <div class="result-content">
                     <div class="score">
-                        <p class="grow-link">Score: <br> <span>60 wpm</span> </p>
+                        <p class="grow-link">Score: <br> <span>nil</span> </p>
                     </div>
                     <div class="accuracy">
-                        <p class="grow-link">Accuracy: <br> <span>95 %</span> </p>
+                        <p class="grow-link">Accuracy: <br> <span>nil</span> </p>
                     </div>
                     <div class="time-spent">
-                        <p class="grow-link">Time: <br> <span>30 sec</span> </p>
+                        <p class="grow-link">Time: <br> <span>nil</span> </p>
                     </div>
                 </div>
             </div>
@@ -76,15 +78,30 @@
             <div class="typing">
                 <div class="typing-area">
                     <div class="caret"></div>
-                    <p class="given-text">A linked list is a data structure in which the objects are arranged in a
-                        linear order.
-                        The width and height properties of the DOMRect object returned by the method include the padding
-                        and
-                        border-width, not only the content width/height. In the standard box model, this would be equal
-                        to
-                        the width or height property of the element + padding + border-width. But if box-sizing:
-                        border-box
-                        is set for the element this would be directly equal to its width or height.</p>
+                    <div class="caps-lock">Caps Lock: ON</div>
+                    <p class="given-text">JavaScript (JS) is a lightweight, interpreted, or just-in-time compiled
+                        programming language with first-class functions. While it is most well-known as the scripting
+                        language for Web pages, many non-browser environments also use it, such as Node.js, Apache
+                        CouchDB and Adobe Acrobat. JavaScript is a prototype-based, multi-paradigm, single-threaded,
+                        dynamic language, supporting object-oriented, imperative, and declarative (e.g. functional
+                        programming) styles.
+
+                        JavaScript's dynamic capabilities include runtime object construction, variable parameter lists,
+                        function variables, dynamic script creation (via eval), object introspection (via for...in and
+                        Object utilities), and source-code recovery (JavaScript functions store their source text and
+                        can be retrieved through toString()).
+
+                        This section is dedicated to the JavaScript language itself, and not the parts that are specific
+                        to Web pages or other host environments. For information about APIs that are specific to Web
+                        pages, please see Web APIs and DOM.
+
+                        The standards for JavaScript are the ECMAScript Language Specification (ECMA-262) and the
+                        ECMAScript Internationalization API specification (ECMA-402). As soon as one browser implements
+                        a feature, we try to document it. This means that cases where some proposals for new ECMAScript
+                        features have already been implemented in browsers, documentation and examples in MDN articles
+                        may use some of those new features. Most of the time, this happens between the stages 3 and 4,
+                        and is usually before the spec is officially published.</p>
+                    <div id="after-text" class="hidden"></div>
                 </div>
                 <input type="text" id="myInput" autocomplete="off">
             </div>
