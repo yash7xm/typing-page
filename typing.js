@@ -6,6 +6,7 @@ const li = document.querySelectorAll('.timer-options>li');
 const resDiv = document.querySelectorAll('.result-content>div>p');
 const liveTime = document.querySelector('.live-time>div>p');
 const typingArea = document.querySelector('.typing-area');
+const nav = document.querySelector('nav');
 
 window.addEventListener('mousemove', (e) => {
     mouseCaret.style.top = e.pageY + 'px';
@@ -69,6 +70,17 @@ typingArea.addEventListener('mouseover', () => {
 typingArea.addEventListener('mouseleave', () => {
     mouseCaret.classList.add('mouseCaret');
 })
+
+
+function handleNavToggle() {
+    nav.dataset.transitionable = 'true';
+    nav.dataset.toggled = nav.dataset.toggled === "true" ? "false" : "true";
+}
+
+window.matchMedia("(max-width: 800px)").onchange = e => {
+    nav.dataset.transitionable = "false";
+    nav.dataset.toggled = "false";
+}
 
 //main script
 
