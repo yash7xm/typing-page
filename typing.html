@@ -7,13 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Typing Page</title>
 
-    <link rel="stylesheet" href="typing.css">
+    <link rel="stylesheet" href="/typing.css">
 
     <script src="https://kit.fontawesome.com/040eb06c51.js" crossorigin="anonymous"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&family=Space+Grotesk&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Arvo&family=Caudex&family=Raleway&family=Roboto+Mono:wght@300&family=Space+Grotesk&display=swap"
         rel="stylesheet">
 
 </head>
@@ -52,7 +53,7 @@
                 <button class="time border-link"><i class="fa-solid fa-clock"></i></button>
             </div>
             <ul class="timer-options">
-                <li class="grow-link" value="10">10</li>
+                <li class="grow-link" value="15">15</li>
                 <li class="grow-link" value="30">30</li>
                 <li class="grow-link" value="60">60</li>
                 <li class="grow-link" value="120">120</li>
@@ -78,15 +79,17 @@
         </div>
         <div class="typing-area">
             <div class="caret"></div>
-            <div class="caps-lock"><i class="fa-solid fa-square-a-lock" style="color: #ffffff;"></i></div>
-            <p class="given-text">JavaScript (JS) is a lightweight, interpreted, or just-in-time compiled
+            <div class="caps-lock">
+                <p>Caps Lock: <span></span></p>
+            </div>
+            <p class="given-text">javaScript is a lightweight interpreted or compiled
             </p>
             <div id="after-text" class="hidden"></div>
             <input type="text" id="myInput" autocomplete="off">
         </div>
     </div>
 
-    <script src="typing.js"></script>
+    <script src="/typing.js"></script>
 </body>
 
 </html>
