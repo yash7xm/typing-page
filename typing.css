@@ -1,7 +1,47 @@
-:root {
+/* :root {
     --color-1: rgb(116, 112, 131);
     --color-2: #1e2345;
     --font-1: 'Space Grotesk', sans-serif;
+} */
+
+:root.theme1 {
+    --background-color: #050a18;
+    --main-text-color: rgb(116, 112, 131);
+    --secondary-text-color: white;
+    --hover-color: white;
+    --border-color: #1e2345;
+    --typing-area-color: black;
+    --font-1: 'Space Grotesk', sans-serif;
+}
+
+:root.theme2 {
+    --background-color: #1f1f1f;
+    --main-text-color: #cccccc;
+    --secondary-text-color: white;
+    --border-color: #777777;
+    --hover-color: #ffffff;
+    --typing-area-color: rgb(26, 22, 22);
+    --font-1: 'Raleway', sans-serif;
+}
+
+:root.theme3 {
+    --background-color: #222831;
+    --main-text-color: #79a7ca;
+    --secondary-text-color: #EEEEEE;
+    --border-color: #00ADB5;
+    --hover-color: #71C9CE;
+    --typing-area-color: #393E46;
+    --font-1: 'Arvo', serif ;
+}
+
+:root.theme4 {
+    --background-color: #FFE2E2;
+    --main-text-color: #6A2C70;
+    --secondary-text-color: #2B2E4A;
+    --border-color: #8785A2;
+    --hover-color: #ffffff;
+    --typing-area-color: #404258;
+    --font-1: 'Caudex', serif;
 }
 
 * {
@@ -15,18 +55,20 @@
 }
 
 body {
-    background-color: #050a18;
+    background-color: var(--background-color);
     display: flex;
     flex-direction: column;
     height: 100vh;
     overflow: hidden;
+    transition: all 300ms ease;
 }
 
 /* nav */
 nav {
     display: flex;
     height: 12vh;
-    border-bottom: 1px solid var(--color-2);
+    border-bottom: 1px solid var(--border-color);
+    transition: all 300ms ease;
 }
 
 .nav-mobile-section {
@@ -38,20 +80,23 @@ nav {
     width: 30vw;
     display: flex;
     align-items: center;
-    border-right: 1px solid var(--color-2);
+    border-right: 1px solid var(--border-color);
+    transition: all 300ms ease;
 }
 
 .brand-name>a {
-    color: var(--color-1);
     margin-left: 1.5rem;
     padding: 1.8rem 1.5rem;
     text-decoration: none;
     font-size: 2.2rem;
+    color: var(--main-text-color);
     font-family: var(--font-1);
+    transition: all 300ms ease;
 }
 
 .brand-name>a:hover {
-    color: white;
+    color: var(--hover-color);
+    transition: all 300ms ease;
 }
 
 .main-btns {
@@ -59,20 +104,25 @@ nav {
     width: 50vw;
     justify-content: space-around;
     align-items: center;
-    border-right: 1px solid var(--color-2);
+    border-right: 1px solid var(--border-color);
+    transition: all 300ms ease;
 }
 
 .notes>a,
 .test>a,
 .own-text>a {
-    color: var(--color-1);
     text-decoration: none;
     padding: 1.8rem 1.5rem;
     font-size: 1.1rem;
+    color: var(--main-text-color);
     font-family: var(--font-1);
+    transition: all 300ms ease;
 }
 
-.test>a {
+.theme1 .test>a,
+.theme2 .test>a,
+.theme3 .test>a,
+.theme4 .test>a {
     color: rgb(126, 87, 194);
     transition: all 300ms ease;
 }
@@ -80,7 +130,8 @@ nav {
 .notes>a:hover,
 .test>a:hover,
 .own-text>a:hover {
-    color: white;
+    color: var(--hover-color);
+    transition: all 300ms ease;
 }
 
 .profile {
@@ -93,13 +144,16 @@ nav {
 .profile-link {
     padding: 1.8rem 1.5rem;
     text-decoration: none;
-    color: var(--color-1);
-    font-size: 1.1rem;
+    /* color: var(--color-1); */
+    font-size: 1rem;
+    color: var(--main-text-color);
     font-family: var(--font-1);
+    transition: all 300ms ease;
 }
 
 .profile-link:hover {
-    color: white;
+    color: var(--hover-color);
+    transition: all 300ms ease;
 }
 
 #nav-toggle-btn {
@@ -146,7 +200,7 @@ nav {
     width: 8px;
 }
 
-.content    ::-webkit-scrollbar-thumb {
+.content ::-webkit-scrollbar-thumb {
     background-color: var(--color-1);
     border-radius: 5px;
 }
@@ -154,13 +208,14 @@ nav {
 /* timer */
 
 .timer {
-    border-right: 1px solid var(--color-2);
-    border-bottom: 1px solid var(--color-2);
     overflow: auto;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: start;
+    border-right: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    transition: all 300ms ease;
 }
 
 .clock {
@@ -168,16 +223,18 @@ nav {
 }
 
 .time {
-    color: var(--color-1);
     background-color: transparent;
     border: none;
     cursor: pointer;
     width: max-content;
     font-size: 2.5rem;
+    color: var(--main-text-color);
+    transition: all 300ms ease;
 }
 
 .time:hover {
-    color: white;
+    color: var(--hover-color);
+    transition: all 300ms ease;
 }
 
 .timer-options {
@@ -187,15 +244,17 @@ nav {
 }
 
 .timer-options>li {
-    color: var(--color-1);
-    font-family: var(--font-1);
     font-size: 1.6rem;
     cursor: pointer;
     margin-right: 20%;
+    color: var(--main-text-color);
+    font-family: var(--font-1);
+    transition: all 300ms ease;
 }
 
 .timer-options>li:hover {
-    color: white;
+    color: var(--hover-color);
+    transition: all 300ms ease;
 }
 
 @media (max-width: 920px) {
@@ -222,8 +281,9 @@ nav {
     flex-direction: column;
     justify-content: space-around;
     align-items: start;
-    border-right: 1px solid var(--color-2);
-    border-bottom: 1px solid var(--color-2);
+    border-right: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    transition: all 300ms ease;
     overflow: auto;
 }
 
@@ -235,15 +295,17 @@ nav {
 }
 
 .result>div>div>p {
-    color: var(--color-1);
     font-size: 1.6rem;
     width: max-content;
-    font-family: var(--font-1);
     margin: 10% 0;
+    color: var(--main-text-color);
+    font-family: var(--font-1);
+    transition: all 300ms ease;
 }
 
 .result>div>div>p>span {
-    color: white;
+    color: var(--secondary-text-color);
+    transition: all 300ms ease;
 }
 
 .result::-webkit-scrollbar {
@@ -255,6 +317,7 @@ nav {
     background-color: var(--color-1);
     border-radius: 5px;
 }
+
 /* live-time */
 
 .live-time {
@@ -263,7 +326,8 @@ nav {
     flex-direction: column;
     justify-content: space-around;
     align-items: start;
-    border-right: 1px solid var(--color-2);
+    border-right: 1px solid var(--border-color);
+    transition: all 300ms ease;
     overflow: auto;
 }
 
@@ -272,10 +336,11 @@ nav {
 }
 
 .live-time>div>p {
-    color: white;
     width: max-content;
     font-size: 3.5rem;
+    color: var(--secondary-text-color);
     font-family: var(--font-1);
+    transition: all 300ms ease;
 }
 
 .liveTimeEffects {
@@ -312,7 +377,8 @@ nav {
     position: relative;
     grid-row: 1 / span 3;
     margin: 1.2rem;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: var(--typing-area-color);
+    transition: all 300ms ease;
     border-radius: 5px;
     padding: 1.2rem;
     overflow-y: auto;
@@ -446,17 +512,51 @@ nav {
     border-radius: 50%;
 }
 
+.clicked {
+    animation: click 800ms ease;
+}
+
+@-webkit-keyframes click {
+
+    0%,
+    100% {
+        padding: 0px;
+    }
+
+    50% {
+        padding: 20px;
+    }
+}
+
+@keyframes click {
+
+    0%,
+    100% {
+        padding: 0px;
+    }
+
+    50% {
+        padding: 20px;
+    }
+}
+
 /* caps lock */
 
 .caps-lock {
-    color: red;
-    font-size: 1.1rem;
     position: absolute;
     top: 0;
     left: 0;
-    padding: 2px;
-    font-weight: bold;
     visibility: hidden;
+}
+
+.caps-lock>p {
+    font-size: 1rem;
+    color: white;
+    font-family: var(--font-1);
+}
+
+.caps-lock>p>span {
+    color: red;
 }
 
 @media (max-width: 800px) {
@@ -499,7 +599,7 @@ nav {
     }
 
     .nav-mobile-section {
-        background-color: rgb(6, 11, 25);
+        background-color: var(--background-color);
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -531,7 +631,7 @@ nav {
     .profile {
         width: 80%;
         margin-top: 2rem;
-        border-top: 1px solid var(--color-2);
+        border-top: 1px solid var(--border-color);
     }
 
     .profile-link {
@@ -590,7 +690,7 @@ nav {
     .live-time {
         grid-column: 3;
         grid-row: 1;
-        border-bottom: 1px solid var(--color-2);
+        border-bottom: 1px solid var(--border-color);
         border-right: none;
         justify-content: center;
         align-items: center;
