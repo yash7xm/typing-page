@@ -1,3 +1,55 @@
+// color theme
+function applyNextColorTheme() {
+    var themes = ['theme1', 'theme2', 'theme3', 'theme4'];
+    var currentTheme = getAppliedTheme();
+    document.documentElement.classList.remove(currentTheme);
+    var currentIndex = themes.indexOf(currentTheme);
+    var nextIndex = (currentIndex + 1) % themes.length;
+    var nextTheme = themes[nextIndex];
+    document.documentElement.classList.add(nextTheme);
+}
+function getAppliedTheme() {
+    var themes = ['theme1', 'theme2', 'theme3', 'theme4'];
+    var appliedTheme = themes.find(theme => document.documentElement.classList.contains(theme));
+    return appliedTheme;
+}
+
+document.addEventListener('click', (event) => {
+    const clickedElement = event.target;
+    if (clickedElement.tagName.toLowerCase() !== 'button' &&
+        clickedElement.tagName.toLowerCase() !== 'a' &&
+        clickedElement.tagName.toLowerCase() !== 'li' &&
+        clickedElement.tagName.toLowerCase() !== 'p' &&
+        clickedElement.tagName.toLowerCase() !== 'input' &&
+        clickedElement.tagName.toLowerCase() !== 'i' &&
+        clickedElement.tagName.toLowerCase() !== 'span' &&
+        !clickedElement.classList.contains('typing-area')) {
+
+        if (!mouseCaret.classList.contains('clicked'))
+            applyNextColorTheme();
+    }
+
+    if (clickedElement.tagName.toLowerCase() !== 'button' &&
+        clickedElement.tagName.toLowerCase() !== 'a' &&
+        clickedElement.tagName.toLowerCase() !== 'li' &&
+        clickedElement.tagName.toLowerCase() !== 'p' &&
+        clickedElement.tagName.toLowerCase() !== 'input' &&
+        clickedElement.tagName.toLowerCase() !== 'i' &&
+        clickedElement.tagName.toLowerCase() !== 'span' &&
+        !clickedElement.classList.contains('typing-area')) {
+
+        mouseCaret.classList.add('clicked');
+        setTimeout(function () {
+            mouseCaret.classList.remove('clicked');
+        }, 800);
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    var defaultTheme = 'theme1';
+    document.documentElement.classList.add(defaultTheme);
+});
+
 // mouse caret
 const mouseCaret = document.querySelector('.mouseCaret');
 const navLinks = document.querySelectorAll('nav .grow-link');
@@ -57,11 +109,11 @@ resDiv.forEach(link => {
 
 liveTime.addEventListener('mouseover', () => {
     mouseCaret.classList.add('caret-grow');
-    link.classList.add('hovered-link');
+    liveTime.classList.add('hovered-link');
 })
 liveTime.addEventListener('mouseleave', () => {
     mouseCaret.classList.remove('caret-grow');
-    link.classList.remove('hovered-link');
+    liveTime.classList.remove('hovered-link');
 })
 
 typingArea.addEventListener('mouseover', () => {
@@ -106,44 +158,20 @@ const accuracy = document.querySelector('.accuracy>p>span');
 const timeSpent = document.querySelector('.time-spent>p>span');
 const afterText = document.querySelector('#after-text');
 
+// CAPSLOCK
 
-// const capsLockIndicator = document.querySelector('.caps-lock');
+const capsLockIndicator = document.querySelector('.caps-lock');
+const capsMsg = document.querySelector('.caps-lock>p>span')
 
-// document.addEventListener('keydown', function () {
-//     if (event.getModifierState('CapsLock')) {
-//         console.log('Caps Lock is initially on.');
-//     } else {
-//         console.log('Caps Lock is initially off.');
-//     }
-// });
-
-// document.addEventListener('keydown', () => {
-
-// });
-
-
-
-// document.addEventListener('DOMContentLoaded', function () {
-//     let capsLockIndicator = document.querySelector('.caps-lock');
-//     let capsLockOn = false; // Variable to track the Caps Lock state
-
-//     function checkCapsLock(event) {
-//         let capsLockPressed = event.getModifierState && event.getModifierState('CapsLock'); // true or false
-//         if (capsLockPressed !== capsLockOn) {
-//             capsLockOn = capsLockPressed;
-//             capsLockIndicator.style.visibility = capsLockOn ? 'visible' : 'hidden';
-//         }
-//     }
-
-//     // Check Caps Lock state on page load
-//     capsLockOn = navigator.getKeyboardState && navigator.getKeyboardState().getModifierState('CapsLock');
-//     capsLockIndicator.style.visibility = capsLockOn ? 'visible' : 'hidden';
-
-//     document.addEventListener('keydown', checkCapsLock);
-//     document.addEventListener('keyup', checkCapsLock);
-// });
-
-
+input.addEventListener("keyup", function (event) {
+    if (event.getModifierState("CapsLock")) {
+        capsLockIndicator.style.visibility = 'visible';
+        capsMsg.innerText = 'ON';
+    } else {
+        capsLockIndicator.style.visibility = 'hidden';
+        capsMsg.innerText = 'OFF';
+    }
+});
 
 
 let typedWords = 0;
@@ -449,6 +477,15 @@ timerSet.forEach((item) => {
                 clock = 0;
                 stopWatch.innerText = clock;
             }
+            else if (clockActive && clock !== 0 && liActiveValue !== item.getAttribute("value")) {
+                clock = item.getAttribute("value");
+                liActiveValue = item.getAttribute("value");
+                stopWatch.innerText = clock;
+                timerSet.forEach((items) => {
+                    items.style.color = 'rgb(116, 112, 131)';
+                })
+                item.style.color = "#ffd700";
+            }
         }
     });
 });
@@ -583,9 +620,6 @@ function final() {
     info();
     afterText.classList.remove('hidden');
 }
-
-
-
 
 
 
