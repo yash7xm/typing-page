@@ -1,18 +1,82 @@
-// color theme
-function applyNextColorTheme() {
-    var themes = ['theme1', 'theme2', 'theme3', 'theme4'];
-    var currentTheme = getAppliedTheme();
-    document.documentElement.classList.remove(currentTheme);
-    var currentIndex = themes.indexOf(currentTheme);
-    var nextIndex = (currentIndex + 1) % themes.length;
-    var nextTheme = themes[nextIndex];
-    document.documentElement.classList.add(nextTheme);
-}
-function getAppliedTheme() {
-    var themes = ['theme1', 'theme2', 'theme3', 'theme4'];
-    var appliedTheme = themes.find(theme => document.documentElement.classList.contains(theme));
-    return appliedTheme;
-}
+const mouseCaret = document.querySelector('.mouseCaret');
+const navLinks = document.querySelectorAll('nav .grow-link');
+const borderLinks = document.querySelectorAll('.border-link');
+const li = document.querySelectorAll('.timer-options>li');
+const resDiv = document.querySelectorAll('.result-content>div>p');
+const liveTime = document.querySelector('.live-time>div>p');
+const typingArea = document.querySelector('.typing-area');
+const nav = document.querySelector('nav');
+
+const str = document.querySelector(".given-text");
+const input = document.querySelector("#myInput");
+const caret = document.querySelector(".caret");
+const timerSet = document.querySelectorAll(".timer-options>li");
+const time = document.querySelector(".fa-clock");
+
+const originalString = str.textContent.replace(/\s+/g, " ").trim();
+
+let clock = 0;
+let clockActive = false;
+let liActiveValue = 0; 
+let inputStarted = false; 
+let clockHover = false; 
+let intervalId = null;
+
+let typedWords = 0;
+let correctWords = 0;
+let TotalWords = 1;
+let currentWordTyping = 0;
+let timerForScore = true;
+let cnt = 0;
+let ended = false;
+let normalTimer = true;
+let S = 0;
+let A = 0;
+
+let backspaced = false;
+let line = 0;
+let scrollDistance = 0;
+let flag = false;
+let totalLines = 0;
+
+const stopWatch = document.querySelector('.live-time>div>p');
+const score = document.querySelector('.score>p>span');
+const accuracy = document.querySelector('.accuracy>p>span');
+const timeSpent = document.querySelector('.time-spent>p>span');
+const afterText = document.querySelector('#after-text');
+
+const capsLockIndicator = document.querySelector('.caps-lock');
+const capsMsg = document.querySelector('.caps-lock>p>span')
+
+document.addEventListener('DOMContentLoaded', function () {
+    var defaultTheme = 'theme1';
+    document.documentElement.classList.add(defaultTheme);
+});
+
+input.style.height = '0';
+input.style.width = '0';
+input.style.border = '0';
+input.style.padding = '0';
+
+input.addEventListener("keyup", function (event) {
+    if (event.getModifierState("CapsLock")) {
+        capsLockIndicator.style.visibility = 'visible';
+        capsMsg.innerText = 'ON';
+    } else {
+        capsLockIndicator.style.visibility = 'hidden';
+        capsMsg.innerText = 'OFF';
+    }
+});
+
+str.addEventListener('click', () => {
+    input.focus();
+})
+
+document.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+        input.focus();
+    }
+});
 
 document.addEventListener('click', (event) => {
     const clickedElement = event.target;
@@ -44,21 +108,6 @@ document.addEventListener('click', (event) => {
         }, 800);
     }
 });
-
-document.addEventListener('DOMContentLoaded', function () {
-    var defaultTheme = 'theme1';
-    document.documentElement.classList.add(defaultTheme);
-});
-
-// mouse caret
-const mouseCaret = document.querySelector('.mouseCaret');
-const navLinks = document.querySelectorAll('nav .grow-link');
-const borderLinks = document.querySelectorAll('.border-link');
-const li = document.querySelectorAll('.timer-options>li');
-const resDiv = document.querySelectorAll('.result-content>div>p');
-const liveTime = document.querySelector('.live-time>div>p');
-const typingArea = document.querySelector('.typing-area');
-const nav = document.querySelector('nav');
 
 window.addEventListener('mousemove', (e) => {
     mouseCaret.style.top = e.pageY + 'px';
@@ -123,7 +172,6 @@ typingArea.addEventListener('mouseleave', () => {
     mouseCaret.classList.add('mouseCaret');
 })
 
-
 function handleNavToggle() {
     nav.dataset.transitionable = 'true';
     nav.dataset.toggled = nav.dataset.toggled === "true" ? "false" : "true";
@@ -134,83 +182,21 @@ window.matchMedia("(max-width: 800px)").onchange = e => {
     nav.dataset.toggled = "false";
 }
 
-//main script
+function applyNextColorTheme() {
+    var themes = ['theme1', 'theme2', 'theme3', 'theme4'];
+    var currentTheme = getAppliedTheme();
+    document.documentElement.classList.remove(currentTheme);
+    var currentIndex = themes.indexOf(currentTheme);
+    var nextIndex = (currentIndex + 1) % themes.length;
+    var nextTheme = themes[nextIndex];
+    document.documentElement.classList.add(nextTheme);
+}
 
-const str = document.querySelector(".given-text");
-const input = document.querySelector("#myInput");
-const caret = document.querySelector(".caret");
-const timerSet = document.querySelectorAll(".timer-options>li");
-const time = document.querySelector(".fa-clock");
-
-const originalString = str.textContent.replace(/\s+/g, " ").trim(); // trimming not needed spaces
-
-let clock = 0; // for clock-timer to display in live-time
-let clockActive = false; // clock clicked or not
-let liActiveValue = 0; // particular time selected or not
-let inputStarted = false; // user started inputing and now can't click clock or li
-let clockHover = false; // to reapply hover effect on clock
-
-let intervalId = null; // to terminate timer and stop cnt
-
-const stopWatch = document.querySelector('.live-time>div>p');
-const score = document.querySelector('.score>p>span');
-const accuracy = document.querySelector('.accuracy>p>span');
-const timeSpent = document.querySelector('.time-spent>p>span');
-const afterText = document.querySelector('#after-text');
-
-// CAPSLOCK
-
-const capsLockIndicator = document.querySelector('.caps-lock');
-const capsMsg = document.querySelector('.caps-lock>p>span')
-
-input.addEventListener("keyup", function (event) {
-    if (event.getModifierState("CapsLock")) {
-        capsLockIndicator.style.visibility = 'visible';
-        capsMsg.innerText = 'ON';
-    } else {
-        capsLockIndicator.style.visibility = 'hidden';
-        capsMsg.innerText = 'OFF';
-    }
-});
-
-
-let typedWords = 0;
-let correctWords = 0;
-let TotalWords = 1;
-totalWordsInText(originalString);
-let currentWordTyping = 0; // to check number of current typing word, helping in if space is typed in last word, to end it
-let timerForScore = true; // to start normal timer and cnt when input started typing
-let cnt = 0; // timer count
-let ended = false; // to check if process already ended and prevent live timer to end it
-let normalTimer = true; // to check if clock is active or start normal timer count
-let S = 0; // for score
-let A = 0; // for accuracy
-
-let backspaced = false;
-let line = 0;
-let scrollDistance = 0;
-let flag = false;
-let totalLines = 0;
-
-str.addEventListener('click', () => {
-    input.focus();
-})
-
-// typingArea.addEventListener("click", () => {
-//     input.focus();
-// });
-
-document.addEventListener("keydown", function (event) {
-    if (event.key === "Enter") {
-        input.focus();
-    }
-});
-
-// hiding input
-input.style.height = '0';
-input.style.width = '0';
-input.style.border = '0';
-input.style.padding = '0';
+function getAppliedTheme() {
+    var themes = ['theme1', 'theme2', 'theme3', 'theme4'];
+    var appliedTheme = themes.find(theme => document.documentElement.classList.contains(theme));
+    return appliedTheme;
+}
 
 makeHtml(originalString);
 function makeHtml(originalString) {
@@ -233,16 +219,15 @@ function makeHtml(originalString) {
 let firstWordLeft = document.querySelector(`.span0`).getBoundingClientRect().left;
 let firstWordTop = document.querySelector(".span0").getBoundingClientRect().top;
 
-// doing backspacing
 input.addEventListener("keydown", (e) => {
     if (e.ctrlKey && e.key === "Backspace") {
-        e.preventDefault(); // Prevent the default behavior of the key combination
+        e.preventDefault();
         return;
     }
     let ptr = input.value;
     if (ptr.length < 1) {
         return;
-    } //if no character is left
+    }
 
     if (e.key === "Backspace") {
         let once = true;
@@ -250,7 +235,6 @@ input.addEventListener("keydown", (e) => {
         let index = document.querySelector(
             `p.given-text span.span${ptr.length - 1}`
         );
-        // remove notTyped class from all chars till the place where space was entered
         while (index.classList.contains("notTyped")) {
             if (once) {
                 let afterIndex = document.querySelector(
@@ -261,10 +245,10 @@ input.addEventListener("keydown", (e) => {
                 );
                 let beforeIndexTop = beforeIndex.getBoundingClientRect().top;
                 let afterIndexTop = afterIndex.getBoundingClientRect().top;
-                if (index.getBoundingClientRect().top != afterIndexTop) {
+                if (index.getBoundingClientRect().top !== afterIndexTop) {
                     top = true;
                     moveCaretBack(index);
-                } else if (index.getBoundingClientRect().top != beforeIndexTop) {
+                } else if (index.getBoundingClientRect().top !== beforeIndexTop) {
                     top = true;
                     moveCaretBack(beforeIndex);
                     input.value = input.value.slice(0, -1);
@@ -280,13 +264,12 @@ input.addEventListener("keydown", (e) => {
             flag = true;
         }
         if (flag) {
-            // only if above loop ran
             input.value = ptr;
             input.value += originalString[ptr.length - 1];
-            let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 35 + index.getBoundingClientRect().width;
+            let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 20 + index.getBoundingClientRect().width;
             caret.style.left = `${caretLeft}px`;
             if (!top) {
-                let caretTop = index.getBoundingClientRect().top - firstWordTop + 35;
+                let caretTop = index.getBoundingClientRect().top - firstWordTop + 20;
                 caret.style.top = `${caretTop}px`;
             }
             flag = false;
@@ -294,13 +277,13 @@ input.addEventListener("keydown", (e) => {
         } else {
             index.classList.remove("right");
             index.classList.remove("wrong");
-            let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 35;
+            let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 20;
             caret.style.left = `${caretLeft}px`;
-            let caretTop = index.getBoundingClientRect().top - firstWordTop + 35;
+            let caretTop = index.getBoundingClientRect().top - firstWordTop + 20;
             caret.style.top = `${caretTop}px`;
         }
         if (ptr.length == 1) {
-            caret.style.left = "35px";
+            caret.style.left = "20px";
             return;
         }
 
@@ -312,7 +295,7 @@ input.addEventListener("keydown", (e) => {
         );
         let beforeIndexTop = beforeIndex.getBoundingClientRect().top;
         let afterIndexTop = afterIndex.getBoundingClientRect().top;
-        if (index.getBoundingClientRect().top != afterIndexTop) {
+        if (index.getBoundingClientRect().top !== afterIndexTop) {
             moveCaretBack(index);
         } else if (index.getBoundingClientRect().top != beforeIndexTop) {
             moveCaretBack(beforeIndex);
@@ -322,9 +305,8 @@ input.addEventListener("keydown", (e) => {
     }
 });
 
-// handling the input
 input.addEventListener("input", (e) => {
-    if (clockActive && clock === 0) {  // to prevent when only clock is selected but no time
+    if (clockActive && clock === 0) {
         input.value = input.value.slice(0, -1);
         return;
     }
@@ -337,7 +319,6 @@ input.addEventListener("input", (e) => {
     }
 
     if (input.value.length > 0 && clockActive == true && clock != 0) {
-        // inputStarted = true;
         clockActive = false;
         normalTimer = false;
         startTimerForClock();
@@ -354,24 +335,20 @@ input.addEventListener("input", (e) => {
         return;
     }
     if (p[0] == " ") {
-        // to prevent typing space in start
         p = "";
         input.value = "";
         return;
     }
     if (p.length > 1 && p[p.length - 1] == " " && p[p.length - 2] == " ") {
-        // to prevent typing consecutive spaces
         input.value = input.value.slice(0, -1);
         return;
     }
-    // if correct word is typed
     if (originalString[p.length - 1] === p[p.length - 1]) {
         index.classList.add("right");
         if (p[p.length - 1] === ' ')
             currentWordTyping++;
     }
     else {
-        // space is typed in b/w words
         if (p[p.length - 1] == " ") {
             currentWordTyping++;
             input.value = input.value.slice(0, -1);
@@ -390,15 +367,17 @@ input.addEventListener("input", (e) => {
                 input.value += " ";
             if (index)
                 index.classList.add("notTyped");
-            // let afterIndex = document.querySelector(
-            //     `p.given-text span.span${p.length}`
-            // );
-            // let afterIndexTop = afterIndex.getBoundingClientRect().top;
-            // if (index.getBoundingClientRect().top != afterIndexTop) {
-            //     moveCaretDown(afterIndex, index);
-            // } else {
-            //     moveCaret(index);
-            // }
+            let afterIndex = document.querySelector(
+                `p.given-text span.span${p.length}`
+            );
+            if (afterIndex) {
+                let afterIndexTop = afterIndex.getBoundingClientRect().top;
+                if (index.getBoundingClientRect().top !== afterIndexTop) {
+                    moveCaretDown(afterIndex, index);
+                } else {
+                    moveCaret(index);
+                }
+            }
             if (currentWordTyping >= TotalWords) {
                 final();
                 ended = true;
@@ -415,13 +394,15 @@ input.addEventListener("input", (e) => {
     let afterIndex = document.querySelector(
         `p.given-text span.span${p.length}`
     );
-    // let afterIndexTop = afterIndex.getBoundingClientRect().top;
-    // if (index.getBoundingClientRect().top != afterIndexTop) {
-    //     moveCaretDown(afterIndex, index);
-    // } else {
-    //     moveCaret(index);
-    // }
-    // caret.style.animationName = "none";
+    if (afterIndex) {
+        let afterIndexTop = afterIndex.getBoundingClientRect().top;
+        if (index.getBoundingClientRect().top !== afterIndexTop) {
+            moveCaretDown(afterIndex, index);
+        } else {
+            moveCaret(index);
+        }
+    }
+    caret.style.animationName = "none";
 
     if (input.value.length >= originalString.length) {
         final();
@@ -430,8 +411,6 @@ input.addEventListener("input", (e) => {
     }
 });
 
-
-// for timer activation
 time.addEventListener('click', () => {
     if (inputStarted === false) {
         if (clockActive === false) {
@@ -440,29 +419,27 @@ time.addEventListener('click', () => {
             clockHover = false;
         }
         else {
-            time.style.color = 'rgb(116, 112, 131)';
+            time.style.color = 'var(--main-text-color)';
             clockActive = false;
             clock = 0;
             stopWatch.innerText = clock;
             clockHover = true;
             timerSet.forEach((item) => {
-                item.style.color = 'rgb(116, 112, 131)';
+                item.style.color = 'var(--main-text-color)';
             })
         }
     }
 });
 
-// to fix hover effect of clock
 time.addEventListener('mouseover', () => {
     if (clockHover === true)
-        time.style.color = 'white';
+        time.style.color = 'var(--hover-color)';
 });
 time.addEventListener('mouseout', () => {
     if (clockHover === true)
-        time.style.color = 'rgb(116, 112, 131)';
+        time.style.color = 'var(--main-text-color)';
 })
 
-// to select particular time
 timerSet.forEach((item) => {
     item.addEventListener("click", () => {
         if (inputStarted === false) {
@@ -473,7 +450,7 @@ timerSet.forEach((item) => {
                 stopWatch.innerText = clock;
             }
             else if (clockActive && liActiveValue === item.getAttribute("value")) {
-                item.style.color = 'rgb(116, 112, 131)';
+                item.style.color = 'var(--main-text-color)';
                 clock = 0;
                 stopWatch.innerText = clock;
             }
@@ -482,7 +459,7 @@ timerSet.forEach((item) => {
                 liActiveValue = item.getAttribute("value");
                 stopWatch.innerText = clock;
                 timerSet.forEach((items) => {
-                    items.style.color = 'rgb(116, 112, 131)';
+                    items.style.color = 'var(--main-text-color)';
                 })
                 item.style.color = "#ffd700";
             }
@@ -490,7 +467,6 @@ timerSet.forEach((item) => {
     });
 });
 
-// timer for clock, for selected time
 function startTimerForClock() {
     setTimeout(() => {
         if (ended === true) {
@@ -511,7 +487,7 @@ function startTimerForClock() {
     }, 1000);
 }
 
-// total words count
+totalWordsInText(originalString);
 function totalWordsInText(originalString) {
     for (let i = 0; i < originalString.length; i++) {
         if (originalString[i] === ' ')
@@ -519,10 +495,8 @@ function totalWordsInText(originalString) {
     }
 }
 
-// to calculate words typed and correct
 function Words() {
     input.value = input.value.replace(/\s+/g, " ").trim();
-    // typed words
     let toCheckFirstWord = true;
     let toCheckOtherWords = false;
     for (let i = 0; i < input.value.length; i++) {
@@ -539,7 +513,6 @@ function Words() {
     if (input.value.length >= originalString.length)
         typedWords++;
 
-    // correct words
     let flag = true;
     for (let i = 0; i < input.value.length; i++) {
         let index = document.querySelector(`p.given-text span.span${i}`)
@@ -559,7 +532,6 @@ function Words() {
     }
 }
 
-// to calculate scores and display live-time also
 function timer() {
     intervalId = setInterval(() => {
         cnt++;
@@ -568,7 +540,6 @@ function timer() {
     }, 1000);
 }
 
-// for displaying different texts
 function info() {
     if (S >= 60) {
         if (A === 100)
@@ -602,15 +573,12 @@ function info() {
     }
 }
 
-// to calculate scores and terminate everything
 function final() {
     clearInterval(intervalId);
     input.disabled = true;
     Words();
     S = (correctWords / (cnt / 60)).toFixed(2);
     A = (((correctWords / (cnt / 60)) * 100) / (typedWords / (cnt / 60))).toFixed(2);
-    // console.log(typedWords)
-    // console.log(correctWords)
     score.textContent = `${S} wpm`;
     accuracy.textContent = `${A} %`;
     timeSpent.textContent = `${(cnt / 60).toFixed(2)} min`;
@@ -621,45 +589,33 @@ function final() {
     afterText.classList.remove('hidden');
 }
 
-
-
 function moveCaret(index) {
-    let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 35 + index.getBoundingClientRect().width;
+    let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 20 + index.getBoundingClientRect().width;
     caret.style.left = `${caretLeft}px`;
-    let caretTop = index.getBoundingClientRect().top - firstWordTop + 35;
-    caret.style.top = `${caretTop}px`;
+    let caretTop = index.getBoundingClientRect().top - firstWordTop + 20;
+    caret.style.top = `${caretTop + typingArea.scrollTop}px`;
 }
 
 function moveCaretDown(afterIndex, index) {
     line++;
-    let caretLeft = 35;
+    let caretLeft = 20;
     caret.style.left = `${caretLeft}px`;
-    let caretTop = afterIndex.getBoundingClientRect().top - firstWordTop + 35;
-    caret.style.top = `${caretTop}px`;
-    if (line > 2) {
-        if (line == 3) scrollDistance = 55;
-        else scrollDistance += 36;
-        if (totalLines - line <= 7) {
-        } else {
-            caret.style.top = "78px";
-            container.scrollTop = scrollDistance;
-        }
+    let caretTop = afterIndex.getBoundingClientRect().top - firstWordTop + 20;
+    if (line > 2 && typingArea.scrollHeight - typingArea.scrollTop > typingArea.clientHeight) {
+        scrollDistance += 36;
+        typingArea.scrollTop = scrollDistance;
     }
+    caret.style.top = `${caretTop + typingArea.scrollTop}px`;
 }
 
 function moveCaretBack(index) {
     if (line != 0) line--;
-    let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 35;
+    let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 20;
     caret.style.left = `${caretLeft}px`;
-    let caretTop = index.getBoundingClientRect().top - firstWordTop + 35;
-    caret.style.top = `${caretTop}px`;
+    let caretTop = index.getBoundingClientRect().top - firstWordTop + 20;
     if (line >= 2) {
-        if (line == 2) scrollDistance = 18;
-        else scrollDistance -= 36;
-        if (totalLines - line <= 7) {
-        } else {
-            caret.style.top = "78px";
-            container.scrollTop = scrollDistance;
-        }
+        scrollDistance -= 36;
+        typingArea.scrollTop = scrollDistance;
     }
+    caret.style.top = `${caretTop - typingArea.scrollTop}px`;
 }
