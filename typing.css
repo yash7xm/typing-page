@@ -382,12 +382,13 @@ nav {
 .typing-area {
     position: relative;
     grid-row: 1 / span 3;
-    margin: 2rem;
-    background-color: var(--typing-area-color);
+    /* margin: 2rem; */
+    /* background-color: var(--typing-area-color); */
+    background-color: rgba(0,0,0,0.5);
     transition: all 300ms ease;
-    border-radius: 5px;
+    /* border-radius: 5px; */
     padding: 20px;
-    overflow-y: auto;
+    overflow-y: scroll;
 }
 
 .typing-area::-webkit-scrollbar {
@@ -449,7 +450,7 @@ nav {
     width: 1.5px;
     height: 1.4em;
     position: absolute;
-    background-color: white;
+    background-color: yellow;
     left: 20px;
     transition: all 0.125s ease 0s;
     margin: 0;

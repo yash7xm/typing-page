@@ -68,7 +68,7 @@ input.addEventListener("keyup", function (event) {
     }
 });
 
-str.addEventListener('click', () => {
+typingArea.addEventListener('click', () => {
     input.focus();
 })
 
@@ -590,32 +590,44 @@ function final() {
 }
 
 function moveCaret(index) {
-    let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 20 + index.getBoundingClientRect().width;
+    let caretLeft =
+    index.getBoundingClientRect().left - firstWordLeft + 20 + index.getBoundingClientRect().width;
     caret.style.left = `${caretLeft}px`;
-    let caretTop = index.getBoundingClientRect().top - firstWordTop + 20;
-    caret.style.top = `${caretTop + typingArea.scrollTop}px`;
-}
-
-function moveCaretDown(afterIndex, index) {
+    let caretTop = index.getBoundingClientRect().top - firstWordTop + 25;
+    caret.style.top = `${caretTop}px`;
+  }
+  
+  function moveCaretDown(afterIndex, index) {
     line++;
+    console.log(line, totalLines);
     let caretLeft = 20;
     caret.style.left = `${caretLeft}px`;
-    let caretTop = afterIndex.getBoundingClientRect().top - firstWordTop + 20;
-    if (line > 2 && typingArea.scrollHeight - typingArea.scrollTop > typingArea.clientHeight) {
-        scrollDistance += 36;
+    let caretTop = afterIndex.getBoundingClientRect().top - firstWordTop + 25;
+    caret.style.top = `${caretTop}px`;
+    if (line > 2) {
+      if (line == 3) scrollDistance = 55;
+      else scrollDistance += 36;
+      if (totalLines - line <= 7) {
+      } else {
+        caret.style.top = "78px";
         typingArea.scrollTop = scrollDistance;
+      }
     }
-    caret.style.top = `${caretTop + typingArea.scrollTop}px`;
-}
-
-function moveCaretBack(index) {
+  }
+  
+  function moveCaretBack(index) {
     if (line != 0) line--;
     let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 20;
     caret.style.left = `${caretLeft}px`;
-    let caretTop = index.getBoundingClientRect().top - firstWordTop + 20;
+    let caretTop = index.getBoundingClientRect().top - firstWordTop + 25;
+    caret.style.top = `${caretTop}px`;
     if (line >= 2) {
-        scrollDistance -= 36;
+      if (line == 2) scrollDistance = 18;
+      else scrollDistance -= 36;
+      if (totalLines - line <= 7) {
+      } else {
+        caret.style.top = "78px";
         typingArea.scrollTop = scrollDistance;
+      }
     }
-    caret.style.top = `${caretTop - typingArea.scrollTop}px`;
-}
+  }
