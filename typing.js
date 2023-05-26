@@ -38,7 +38,8 @@ let line = 0;
 let scrollDistance = 0;
 let flag = false;
 let totalLines = 0;
-let nextLineTop = 142;
+let nextLineTop = 78;
+let maxLines = 0;
 
 const stopWatch = document.querySelector('.live-time>div>p');
 const score = document.querySelector('.score>p>span');
@@ -48,6 +49,12 @@ const afterText = document.querySelector('#after-text');
 
 const capsLockIndicator = document.querySelector('.caps-lock');
 const capsMsg = document.querySelector('.caps-lock>p>span')
+
+const width = window.innerWidth || document.documentElement.clientWidth;
+const height = typingArea.getBoundingClientRect().height;
+console.log(height);
+maxLines = Math.floor((height-35)/36) - 3;
+console.log(maxLines);
 
 document.addEventListener('DOMContentLoaded', function () {
     var defaultTheme = 'theme1';
@@ -59,6 +66,11 @@ input.style.width = '0';
 input.style.border = '0';
 input.style.padding = '0';
 
+window.addEventListener('resize', () => {
+    location.reload();
+})
+
+console.log(width);
 input.addEventListener("keyup", function (event) {
     if (event.getModifierState("CapsLock")) {
         capsLockIndicator.style.visibility = 'visible';
@@ -597,11 +609,6 @@ function moveCaret(index) {
     index.getBoundingClientRect().left - firstWordLeft + index.getBoundingClientRect().width;
     caret.style.left = `${caretLeft}px`;
     let caretTop = index.getBoundingClientRect().top - firstWordTop + 35;
-    console.log(caretTop, index.getBoundingClientRect().top, firstWordTop);
-    // if (totalLines - line <= 7) {
-    // } else {
-    //     caretTop += scrollDistance;
-    // }
     caret.style.top = `${caretTop}px`;
   }
   
@@ -615,14 +622,13 @@ function moveCaret(index) {
     if (line > 2) {
       if (line == 3) scrollDistance = 65;
       else scrollDistance += 36;
-      if (totalLines - line <= 7) {
+      if (totalLines - line <= maxLines) {
       } else {
-        // caret.style.top = `${nextLineTop}px`;
-        caret.style.top = '78px';
+        caret.style.top = `${nextLineTop}px`;
         typingArea.scrollTop = scrollDistance;
-        nextLineTop += 36;
       }
     }
+    console.log(scrollDistance);
   }
   
   function moveCaretBack(index) {
@@ -632,13 +638,11 @@ function moveCaret(index) {
     let caretTop = index.getBoundingClientRect().top - firstWordTop + 35;
     caret.style.top = `${caretTop}px`;
     if (line >= 2) {
-      if (line == 2) scrollDistance = 18;
+      if (line == 2) scrollDistance = 29;
       else scrollDistance -= 36;
-      if (totalLines - line <= 7) {
+      if (totalLines - line <= maxLines) {
       } else {
-        nextLineTop -= 36;
-        // caret.style.top = `${nextLineTop}px`;
-        caret.style.top = '78px';
+        caret.style.top = `${nextLineTop}px`;
         typingArea.scrollTop = scrollDistance;
       }
     }
