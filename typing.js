@@ -38,6 +38,7 @@ let line = 0;
 let scrollDistance = 0;
 let flag = false;
 let totalLines = 0;
+let nextLineTop = 142;
 
 const stopWatch = document.querySelector('.live-time>div>p');
 const score = document.querySelector('.score>p>span');
@@ -220,89 +221,90 @@ let firstWordLeft = document.querySelector(`.span0`).getBoundingClientRect().lef
 let firstWordTop = document.querySelector(".span0").getBoundingClientRect().top;
 
 input.addEventListener("keydown", (e) => {
-    if (e.ctrlKey && e.key === "Backspace") {
-        e.preventDefault();
-        return;
-    }
-    let ptr = input.value;
-    if (ptr.length < 1) {
-        return;
-    }
+  if (e.ctrlKey && e.key === "Backspace") {
+    e.preventDefault(); // Prevent the default behavior of the key combination
+    return;
+  }
+  let ptr = input.value;
+  if (ptr.length < 1) {
+    return;
+  } //if no character is left
 
-    if (e.key === "Backspace") {
-        let once = true;
-        let top = false;
-        let index = document.querySelector(
-            `p.given-text span.span${ptr.length - 1}`
-        );
-        while (index.classList.contains("notTyped")) {
-            if (once) {
-                let afterIndex = document.querySelector(
-                    `p.given-text span.span${ptr.length}`
-                );
-                let beforeIndex = document.querySelector(
-                    `p.given-text span.span${ptr.length - 2}`
-                );
-                let beforeIndexTop = beforeIndex.getBoundingClientRect().top;
-                let afterIndexTop = afterIndex.getBoundingClientRect().top;
-                if (index.getBoundingClientRect().top !== afterIndexTop) {
-                    top = true;
-                    moveCaretBack(index);
-                } else if (index.getBoundingClientRect().top !== beforeIndexTop) {
-                    top = true;
-                    moveCaretBack(beforeIndex);
-                    input.value = input.value.slice(0, -1);
-                }
-                once = false;
-            }
-            index.classList.remove("notTyped");
-            index.innerText = originalString[ptr.length - 1];
-            ptr = ptr.slice(0, -1);
-            index = document.querySelector(
-                `p.given-text span.span${ptr.length - 1}`
-            );
-            flag = true;
-        }
-        if (flag) {
-            input.value = ptr;
-            input.value += originalString[ptr.length - 1];
-            let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 20 + index.getBoundingClientRect().width;
-            caret.style.left = `${caretLeft}px`;
-            if (!top) {
-                let caretTop = index.getBoundingClientRect().top - firstWordTop + 20;
-                caret.style.top = `${caretTop}px`;
-            }
-            flag = false;
-            return;
-        } else {
-            index.classList.remove("right");
-            index.classList.remove("wrong");
-            let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 20;
-            caret.style.left = `${caretLeft}px`;
-            let caretTop = index.getBoundingClientRect().top - firstWordTop + 20;
-            caret.style.top = `${caretTop}px`;
-        }
-        if (ptr.length == 1) {
-            caret.style.left = "20px";
-            return;
-        }
-
+  if (e.key === "Backspace") {
+    let once = true;
+    let top = false;
+    let index = document.querySelector(
+      `p.given-text span.span${ptr.length - 1}`
+    );
+    // remove notTyped class from all chars till the place where space was entered
+    while (index.classList.contains("notTyped")) {
+      if (once) {
         let afterIndex = document.querySelector(
-            `p.given-text span.span${ptr.length}`
+          `p.given-text span.span${ptr.length}`
         );
         let beforeIndex = document.querySelector(
-            `p.given-text span.span${ptr.length - 2}`
+          `p.given-text span.span${ptr.length - 2}`
         );
         let beforeIndexTop = beforeIndex.getBoundingClientRect().top;
         let afterIndexTop = afterIndex.getBoundingClientRect().top;
-        if (index.getBoundingClientRect().top !== afterIndexTop) {
-            moveCaretBack(index);
+        if (index.getBoundingClientRect().top != afterIndexTop) {
+          top = true;
+          moveCaretBack(index);
         } else if (index.getBoundingClientRect().top != beforeIndexTop) {
-            moveCaretBack(beforeIndex);
-            input.value = input.value.slice(0, -1);
+          top = true;
+          moveCaretBack(beforeIndex);
+          input.value = input.value.slice(0, -1);
         }
-        backspaced = true;
+        once = false;
+      }
+      index.classList.remove("notTyped");
+      index.innerText = originalString[ptr.length - 1];
+      ptr = ptr.slice(0, -1);
+      index = document.querySelector(
+        `p.given-text span.span${ptr.length - 1}`
+      );
+      flag = true;
     }
+    if (flag) {
+      // only if above loop ran
+      input.value = ptr;
+      input.value += originalString[ptr.length - 1];
+      let caretLeft = index.getBoundingClientRect().left - firstWordLeft + index.getBoundingClientRect().width;
+      caret.style.left = `${caretLeft}px`;
+      if (!top) {
+        let caretTop = index.getBoundingClientRect().top - firstWordTop + 35;
+        caret.style.top = `${caretTop}px`;
+      }
+      flag = false;
+      return;
+    } else {
+      index.classList.remove("right");
+      index.classList.remove("wrong");
+      let caretLeft = index.getBoundingClientRect().left - firstWordLeft;
+      caret.style.left = `${caretLeft}px`;
+      let caretTop = index.getBoundingClientRect().top - firstWordTop + 35;
+      caret.style.top = `${caretTop}px`;
+    }
+    if (ptr.length == 1) {
+      caret.style.left = "0px";
+    }
+
+    let afterIndex = document.querySelector(
+      `p.given-text span.span${ptr.length}`
+    );
+    let beforeIndex = document.querySelector(
+      `p.given-text span.span${ptr.length - 2}`
+    );
+    let beforeIndexTop = beforeIndex.getBoundingClientRect().top;
+    let afterIndexTop = afterIndex.getBoundingClientRect().top;
+    if (index.getBoundingClientRect().top != afterIndexTop) {
+      moveCaretBack(index);
+    } else if (index.getBoundingClientRect().top != beforeIndexTop) {
+      moveCaretBack(beforeIndex);
+      input.value = input.value.slice(0, -1);
+    }
+    backspaced = true;
+  }
 });
 
 input.addEventListener("input", (e) => {
@@ -377,6 +379,7 @@ input.addEventListener("input", (e) => {
                 } else {
                     moveCaret(index);
                 }
+                return;
             }
             if (currentWordTyping >= TotalWords) {
                 final();
@@ -591,42 +594,51 @@ function final() {
 
 function moveCaret(index) {
     let caretLeft =
-    index.getBoundingClientRect().left - firstWordLeft + 20 + index.getBoundingClientRect().width;
+    index.getBoundingClientRect().left - firstWordLeft + index.getBoundingClientRect().width;
     caret.style.left = `${caretLeft}px`;
-    let caretTop = index.getBoundingClientRect().top - firstWordTop + 25;
+    let caretTop = index.getBoundingClientRect().top - firstWordTop + 35;
+    console.log(caretTop, index.getBoundingClientRect().top, firstWordTop);
+    // if (totalLines - line <= 7) {
+    // } else {
+    //     caretTop += scrollDistance;
+    // }
     caret.style.top = `${caretTop}px`;
   }
   
   function moveCaretDown(afterIndex, index) {
     line++;
     console.log(line, totalLines);
-    let caretLeft = 20;
+    let caretLeft = 0;
     caret.style.left = `${caretLeft}px`;
-    let caretTop = afterIndex.getBoundingClientRect().top - firstWordTop + 25;
+    let caretTop = afterIndex.getBoundingClientRect().top - firstWordTop + 35;
     caret.style.top = `${caretTop}px`;
     if (line > 2) {
-      if (line == 3) scrollDistance = 55;
+      if (line == 3) scrollDistance = 65;
       else scrollDistance += 36;
       if (totalLines - line <= 7) {
       } else {
-        caret.style.top = "78px";
+        // caret.style.top = `${nextLineTop}px`;
+        caret.style.top = '78px';
         typingArea.scrollTop = scrollDistance;
+        nextLineTop += 36;
       }
     }
   }
   
   function moveCaretBack(index) {
     if (line != 0) line--;
-    let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 20;
+    let caretLeft = index.getBoundingClientRect().left - firstWordLeft;
     caret.style.left = `${caretLeft}px`;
-    let caretTop = index.getBoundingClientRect().top - firstWordTop + 25;
+    let caretTop = index.getBoundingClientRect().top - firstWordTop + 35;
     caret.style.top = `${caretTop}px`;
     if (line >= 2) {
       if (line == 2) scrollDistance = 18;
       else scrollDistance -= 36;
       if (totalLines - line <= 7) {
       } else {
-        caret.style.top = "78px";
+        nextLineTop -= 36;
+        // caret.style.top = `${nextLineTop}px`;
+        caret.style.top = '78px';
         typingArea.scrollTop = scrollDistance;
       }
     }
