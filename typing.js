@@ -83,6 +83,7 @@ input.addEventListener("keyup", function (event) {
 
 typingArea.addEventListener('click', () => {
     input.focus();
+    typingArea.style.overflowY = 'hidden';
 })
 
 document.addEventListener("keydown", function (event) {
