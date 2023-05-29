@@ -6,6 +6,7 @@ const resDiv = document.querySelectorAll('.result-content>div>p');
 const liveTime = document.querySelector('.live-time>div>p');
 const typingArea = document.querySelector('.typing-area');
 const nav = document.querySelector('nav');
+const inputArea = document.querySelector('.own-text');
 
 const str = document.querySelector(".given-text");
 const input = document.querySelector("#myInput");
@@ -13,7 +14,7 @@ const caret = document.querySelector(".caret");
 const timerSet = document.querySelectorAll(".timer-options>li");
 const time = document.querySelector(".fa-clock");
 
-const originalString = str.textContent.replace(/\s+/g, " ").trim();
+let originalString = str.textContent.replace(/\s+/g, " ").trim();
 
 let clock = 0;
 let clockActive = false;
@@ -24,7 +25,8 @@ let intervalId = null;
 
 let typedWords = 0;
 let correctWords = 0;
-let TotalWords = 1;
+let totalWords = 1;
+let correctCharsTyped = 0;
 let currentWordTyping = 0;
 let timerForScore = true;
 let cnt = 0;
@@ -81,47 +83,48 @@ input.addEventListener("keyup", function (event) {
     }
 });
 
-typingArea.addEventListener('click', () => {
-    input.focus();
-    typingArea.style.overflowY = 'hidden';
-})
+// typingArea.addEventListener('click', () => {
+//     input.focus();
+//     typingArea.style.overflowY = 'hidden';
+// })
 
 document.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
         input.focus();
+        typingArea.style.overflowY = 'hidden';
     }
 });
 
-document.addEventListener('click', (event) => {
-    const clickedElement = event.target;
-    if (clickedElement.tagName.toLowerCase() !== 'button' &&
-        clickedElement.tagName.toLowerCase() !== 'a' &&
-        clickedElement.tagName.toLowerCase() !== 'li' &&
-        clickedElement.tagName.toLowerCase() !== 'p' &&
-        clickedElement.tagName.toLowerCase() !== 'input' &&
-        clickedElement.tagName.toLowerCase() !== 'i' &&
-        clickedElement.tagName.toLowerCase() !== 'span' &&
-        !clickedElement.classList.contains('typing-area')) {
+// document.addEventListener('click', (event) => {
+//     const clickedElement = event.target;
+//     if (clickedElement.tagName.toLowerCase() !== 'button' &&
+//         clickedElement.tagName.toLowerCase() !== 'a' &&
+//         clickedElement.tagName.toLowerCase() !== 'li' &&
+//         clickedElement.tagName.toLowerCase() !== 'p' &&
+//         clickedElement.tagName.toLowerCase() !== 'input' &&
+//         clickedElement.tagName.toLowerCase() !== 'i' &&
+//         clickedElement.tagName.toLowerCase() !== 'span' &&
+//         !clickedElement.classList.contains('typing-area')) {
 
-        if (!mouseCaret.classList.contains('clicked'))
-            applyNextColorTheme();
-    }
+//         if (!mouseCaret.classList.contains('clicked'))
+//             applyNextColorTheme();
+//     }
 
-    if (clickedElement.tagName.toLowerCase() !== 'button' &&
-        clickedElement.tagName.toLowerCase() !== 'a' &&
-        clickedElement.tagName.toLowerCase() !== 'li' &&
-        clickedElement.tagName.toLowerCase() !== 'p' &&
-        clickedElement.tagName.toLowerCase() !== 'input' &&
-        clickedElement.tagName.toLowerCase() !== 'i' &&
-        clickedElement.tagName.toLowerCase() !== 'span' &&
-        !clickedElement.classList.contains('typing-area')) {
+//     if (clickedElement.tagName.toLowerCase() !== 'button' &&
+//         clickedElement.tagName.toLowerCase() !== 'a' &&
+//         clickedElement.tagName.toLowerCase() !== 'li' &&
+//         clickedElement.tagName.toLowerCase() !== 'p' &&
+//         clickedElement.tagName.toLowerCase() !== 'input' &&
+//         clickedElement.tagName.toLowerCase() !== 'i' &&
+//         clickedElement.tagName.toLowerCase() !== 'span' &&
+//         !clickedElement.classList.contains('typing-area')) {
 
-        mouseCaret.classList.add('clicked');
-        setTimeout(function () {
-            mouseCaret.classList.remove('clicked');
-        }, 800);
-    }
-});
+//         mouseCaret.classList.add('clicked');
+//         setTimeout(function () {
+//             mouseCaret.classList.remove('clicked');
+//         }, 800);
+//     }
+// });
 
 window.addEventListener('mousemove', (e) => {
     mouseCaret.style.top = e.pageY + 'px';
@@ -507,7 +510,7 @@ totalWordsInText(originalString);
 function totalWordsInText(originalString) {
     for (let i = 0; i < originalString.length; i++) {
         if (originalString[i] === ' ')
-            TotalWords++;
+            totalWords++;
     }
 }
 
@@ -546,6 +549,14 @@ function Words() {
         if (flag === true && i + 1 === originalString.length)
             correctWords++;
     }
+
+    for(let i=0; i < input.value.length; i++){
+        let index = document.querySelector(`p.given-text span.span${i}`)
+        if(input.value[i] === originalString[i] && !index.classList.contains('notTyped'))
+            correctCharsTyped++;
+    }
+    console.log(correctCharsTyped)
+    console.log(input.value.length);
 }
 
 function timer() {
@@ -593,7 +604,7 @@ function final() {
     clearInterval(intervalId);
     input.disabled = true;
     Words();
-    S = (correctWords / (cnt / 60)).toFixed(2);
+    S = ((correctCharsTyped/5) / (cnt / 60)).toFixed(2);
     A = (((correctWords / (cnt / 60)) * 100) / (typedWords / (cnt / 60))).toFixed(2);
     score.textContent = `${S} wpm`;
     accuracy.textContent = `${A} %`;
@@ -648,3 +659,45 @@ function moveCaret(index) {
       }
     }
   }
+
+
+inputArea.addEventListener('click', () => {
+    console.log('input)');
+    caret.style.backgroundColor = 'transparent';
+    const inputAreaDiv = document.createElement('div');
+    const takingInputDiv = document.createElement('div');
+    const inputHeadingDiv = document.createElement('div');
+    const inputBoxDiv = document.createElement('input');
+    inputAreaDiv.appendChild(takingInputDiv);
+    takingInputDiv.appendChild(inputHeadingDiv);
+    takingInputDiv.appendChild(inputBoxDiv);
+    inputAreaDiv.classList.add('input-area');
+    takingInputDiv.classList.add('taking-input');
+    inputHeadingDiv.classList.add('input-heading');
+    inputBoxDiv.classList.add('input-box');
+    inputHeadingDiv.innerText = 'Paste Your Text Here';
+    inputBoxDiv.setAttribute('contenteditable', 'true');
+    inputBoxDiv.setAttribute('onchange', 'handleInputBoxDiv()');
+    str.innerHTML = '';
+    str.appendChild(inputAreaDiv);
+})
+
+
+function handleInputBoxDiv() {
+    caret.style.backgroundColor = 'yellow';
+    console.log('cliked');
+    const inputBoxDiv = document.querySelector('.input-box');
+    if(inputBoxDiv.value != ''){
+        str.innerHTML = '';
+        str.innerText = inputBoxDiv.value;
+        originalString = str.textContent.replace(/\s+/g, " ").trim();
+        makeHtml(originalString);
+    }
+}
+
+//   <div class="input-area">
+//                     <div class="taking-input">
+//                         <div class="input-heading">Paste Your Text Here</div>
+//                         <div class="input-box" contenteditable="true"></div>
+//                     </div>
+//                 </div>
