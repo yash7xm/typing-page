@@ -592,6 +592,82 @@ nav {
     color: red;
 }
 
+.inputOwnTextWrapper {
+    background: #323437;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 400px;
+    justify-content: center;
+    /* align-items: center; */
+    padding: 2rem;
+    border-radius: 5px;
+}
+
+.popups {
+    display: none;
+}
+
+.popup-wraper {
+    position: fixed;
+    /* opacity: 0.5; */
+    height: 100%;
+    width: 100%;
+    padding: 2rem;
+    background: rgba(0,0,0,0.75);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+    display: grid;
+}
+
+
+
+.inputOwnTextWrapper .heading {
+    font-size: 1.8rem;
+    color: #646669;
+}
+
+.input-text {
+    padding: 0.5rem;
+    height: 180px;
+    border: 1px solid #646669;
+    outline: none;
+    caret-color: yellow;
+    font-size: 1.5rem;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    border-radius: 5px;
+}
+
+.input-text::-webkit-scrollbar {
+    background-color: transparent;
+    width: 4px;
+}
+
+
+.input-text::-webkit-scrollbar-thumb {
+    background-color: var(--main-text-color);
+    border-radius: 5px;
+}
+
+.inputOwnTextWrapper > .button {
+    background: #2c2e31;
+    padding: 0.5rem;
+    text-align: center;
+    font-size: 1.5rem;
+    color: white;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background .125s,color .125s;
+    letter-spacing: 0.1rem;
+}
+
+.inputOwnTextWrapper > .button:hover {
+    background: whitesmoke;
+    color: #050a18;
+}
+
 @media (max-width: 800px) {
     .mouseCaret {
         display: none;
@@ -754,6 +830,23 @@ nav {
     .result>div>div>p {
         margin-right: 10px;
     }
+
+    .inputOwnTextWrapper {
+        width: 300px;
+    }
+
+    .inputOwnTextWrapper .heading {
+        font-size: 1.5rem;
+    }
+
+    .input-text {
+        height: 150px;
+    }
+
+    .inputOwnTextWrapper > .button {
+        font-size: 1.2rem;
+    }
+    
 }
 
 @media (max-width: 350px) {
@@ -775,3 +868,5 @@ nav {
         display: none;
     }
 }
+
+

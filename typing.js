@@ -7,6 +7,7 @@ const liveTime = document.querySelector('.live-time>div>p');
 const typingArea = document.querySelector('.typing-area');
 const nav = document.querySelector('nav');
 const inputArea = document.querySelector('.own-text');
+const popup = document.querySelector('.popups');
 
 const str = document.querySelector(".given-text");
 const input = document.querySelector("#myInput");
@@ -83,10 +84,6 @@ input.addEventListener("keyup", function (event) {
     }
 });
 
-// typingArea.addEventListener('click', () => {
-//     input.focus();
-//     typingArea.style.overflowY = 'hidden';
-// })
 
 document.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
@@ -660,44 +657,9 @@ function moveCaret(index) {
     }
   }
 
-
 inputArea.addEventListener('click', () => {
-    console.log('input)');
-    caret.style.backgroundColor = 'transparent';
-    const inputAreaDiv = document.createElement('div');
-    const takingInputDiv = document.createElement('div');
-    const inputHeadingDiv = document.createElement('div');
-    const inputBoxDiv = document.createElement('input');
-    inputAreaDiv.appendChild(takingInputDiv);
-    takingInputDiv.appendChild(inputHeadingDiv);
-    takingInputDiv.appendChild(inputBoxDiv);
-    inputAreaDiv.classList.add('input-area');
-    takingInputDiv.classList.add('taking-input');
-    inputHeadingDiv.classList.add('input-heading');
-    inputBoxDiv.classList.add('input-box');
-    inputHeadingDiv.innerText = 'Paste Your Text Here';
-    inputBoxDiv.setAttribute('contenteditable', 'true');
-    inputBoxDiv.setAttribute('onchange', 'handleInputBoxDiv()');
-    str.innerHTML = '';
-    str.appendChild(inputAreaDiv);
+    popup.style.display = 'flex';
 })
 
 
-function handleInputBoxDiv() {
-    caret.style.backgroundColor = 'yellow';
-    console.log('cliked');
-    const inputBoxDiv = document.querySelector('.input-box');
-    if(inputBoxDiv.value != ''){
-        str.innerHTML = '';
-        str.innerText = inputBoxDiv.value;
-        originalString = str.textContent.replace(/\s+/g, " ").trim();
-        makeHtml(originalString);
-    }
-}
 
-//   <div class="input-area">
-//                     <div class="taking-input">
-//                         <div class="input-heading">Paste Your Text Here</div>
-//                         <div class="input-box" contenteditable="true"></div>
-//                     </div>
-//                 </div>
