@@ -8,6 +8,8 @@ const typingArea = document.querySelector('.typing-area');
 const nav = document.querySelector('nav');
 const inputArea = document.querySelector('.own-text');
 const popup = document.querySelector('.popups');
+const inputOwnTextWrapper = document.querySelector('.inputOwnTextWrapper');
+const inputText = document.querySelector('.input-text');
 
 const str = document.querySelector(".given-text");
 const input = document.querySelector("#myInput");
@@ -64,6 +66,8 @@ document.addEventListener('DOMContentLoaded', function () {
     document.documentElement.classList.add(defaultTheme);
 });
 
+input.focus();
+
 input.style.height = '0';
 input.style.width = '0';
 input.style.border = '0';
@@ -85,12 +89,12 @@ input.addEventListener("keyup", function (event) {
 });
 
 
-document.addEventListener("keydown", function (event) {
-    if (event.key === "Enter") {
-        input.focus();
-        typingArea.style.overflowY = 'hidden';
-    }
-});
+// document.addEventListener("keydown", function (event) {
+//     if (event.key === "Enter") {
+//         input.focus();
+//         typingArea.style.overflowY = 'hidden';
+//     }
+// });
 
 // document.addEventListener('click', (event) => {
 //     const clickedElement = event.target;
@@ -657,9 +661,35 @@ function moveCaret(index) {
     }
   }
 
+
 inputArea.addEventListener('click', () => {
     popup.style.display = 'flex';
+    typingArea.style.opacity = '0';
+    inputText.textContent = '';
+    inputText.focus();
 })
+
+
+popup.addEventListener('click', (event) => {
+    if (!inputOwnTextWrapper.contains(event.target)) {
+        popup.style.display = 'none';
+        typingArea.style.opacity = '1';
+    }
+});
+
+function handlePopupInputButton() {
+    let ownInputText = inputText.textContent;
+    if(ownInputText.length == 0){
+        inputText.textContent = "You haven't provided any text please provide some text to continue..."
+    }
+    else {
+        originalString = ownInputText.replace(/\s+/g, " ").trim();
+        makeHtml(originalString);
+        popup.style.display = 'none';
+        typingArea.style.opacity = '1';
+        input.focus();
+    }
+}
 
 
 

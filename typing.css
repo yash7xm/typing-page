@@ -615,7 +615,7 @@ nav {
     width: 100%;
     padding: 2rem;
     background: rgba(0,0,0,0.75);
-    z-index: 10000;
+    z-index: 9999;
     align-items: center;
     justify-content: center;
     display: grid;
@@ -626,6 +626,7 @@ nav {
 .inputOwnTextWrapper .heading {
     font-size: 1.8rem;
     color: #646669;
+    pointer-events: none;
 }
 
 .input-text {
@@ -638,6 +639,7 @@ nav {
     overflow-x: hidden;
     overflow-y: scroll;
     border-radius: 5px;
+    color: white;
 }
 
 .input-text::-webkit-scrollbar {
