@@ -10,6 +10,8 @@ const inputArea = document.querySelector('.own-text');
 const popup = document.querySelector('.popups');
 const inputOwnTextWrapper = document.querySelector('.inputOwnTextWrapper');
 const inputText = document.querySelector('.input-text');
+const focusPopup = document.querySelector('.focus-popup-wrapper');
+
 
 const str = document.querySelector(".given-text");
 const input = document.querySelector("#myInput");
@@ -66,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function () {
     document.documentElement.classList.add(defaultTheme);
 });
 
-input.focus();
 
 input.style.height = '0';
 input.style.width = '0';
@@ -89,43 +90,43 @@ input.addEventListener("keyup", function (event) {
 });
 
 
-document.addEventListener("keydown", function (event) {
-    if (event.key === "Enter") {
-        input.focus();
-        typingArea.style.overflowY = 'hidden';
-    }
-});
+// document.addEventListener("keydown", function (event) {
+//     if (event.key === "Enter") {
+//         input.focus();
+//         typingArea.style.overflowY = 'hidden';
+//     }
+// });
 
-document.addEventListener('click', (event) => {
-    const clickedElement = event.target;
-    if (clickedElement.tagName.toLowerCase() !== 'button' &&
-        clickedElement.tagName.toLowerCase() !== 'a' &&
-        clickedElement.tagName.toLowerCase() !== 'li' &&
-        clickedElement.tagName.toLowerCase() !== 'p' &&
-        clickedElement.tagName.toLowerCase() !== 'input' &&
-        clickedElement.tagName.toLowerCase() !== 'i' &&
-        clickedElement.tagName.toLowerCase() !== 'span' &&
-        !clickedElement.classList.contains('typing-area')) {
+// document.addEventListener('click', (event) => {
+//     const clickedElement = event.target;
+//     if (clickedElement.tagName.toLowerCase() !== 'button' &&
+//         clickedElement.tagName.toLowerCase() !== 'a' &&
+//         clickedElement.tagName.toLowerCase() !== 'li' &&
+//         clickedElement.tagName.toLowerCase() !== 'p' &&
+//         clickedElement.tagName.toLowerCase() !== 'input' &&
+//         clickedElement.tagName.toLowerCase() !== 'i' &&
+//         clickedElement.tagName.toLowerCase() !== 'span' &&
+//         !clickedElement.classList.contains('typing-area')) {
 
-        if (!mouseCaret.classList.contains('clicked'))
-            applyNextColorTheme();
-    }
+//         if (!mouseCaret.classList.contains('clicked'))
+//             applyNextColorTheme();
+//     }
 
-    if (clickedElement.tagName.toLowerCase() !== 'button' &&
-        clickedElement.tagName.toLowerCase() !== 'a' &&
-        clickedElement.tagName.toLowerCase() !== 'li' &&
-        clickedElement.tagName.toLowerCase() !== 'p' &&
-        clickedElement.tagName.toLowerCase() !== 'input' &&
-        clickedElement.tagName.toLowerCase() !== 'i' &&
-        clickedElement.tagName.toLowerCase() !== 'span' &&
-        !clickedElement.classList.contains('typing-area')) {
+//     if (clickedElement.tagName.toLowerCase() !== 'button' &&
+//         clickedElement.tagName.toLowerCase() !== 'a' &&
+//         clickedElement.tagName.toLowerCase() !== 'li' &&
+//         clickedElement.tagName.toLowerCase() !== 'p' &&
+//         clickedElement.tagName.toLowerCase() !== 'input' &&
+//         clickedElement.tagName.toLowerCase() !== 'i' &&
+//         clickedElement.tagName.toLowerCase() !== 'span' &&
+//         !clickedElement.classList.contains('typing-area')) {
 
-        mouseCaret.classList.add('clicked');
-        setTimeout(function () {
-            mouseCaret.classList.remove('clicked');
-        }, 800);
-    }
-});
+//         mouseCaret.classList.add('clicked');
+//         setTimeout(function () {
+//             mouseCaret.classList.remove('clicked');
+//         }, 800);
+//     }
+// });
 
 window.addEventListener('mousemove', (e) => {
     mouseCaret.style.top = e.pageY + 'px';
@@ -692,4 +693,19 @@ function handlePopupInputButton() {
 }
 
 
+focusPopup.addEventListener('click', () => {
+    input.focus();
+    typingArea.style.overflowY = 'hidden';
+    str.style.filter = 'blur(0px)';
+    focusPopup.style.display = 'none';
+    caret.style.backgroundColor = 'yellow';
+})
 
+document.addEventListener('click', (event) => {
+    if(!focusPopup.contains(event.target)){
+        input.blur();
+        focusPopup.style.display = 'flex';
+        str.style.filter = 'blur(10px)';
+        caret.style.backgroundColor = 'transparent';
+    }
+})

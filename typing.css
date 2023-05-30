@@ -386,7 +386,7 @@ nav {
 /* text */
 
 .typing-area {
-    /* position: relative; */
+    position: relative;
     grid-row: 1 / span 3;
     /* margin: 2rem; */
     /* background-color: var(--typing-area-color); */
@@ -395,7 +395,7 @@ nav {
     /* border-radius: 5px; */
     padding: 0px 20px;
     overflow-y: scroll;
-    
+    /* filter: blur(4px); */
 }
 
 
@@ -411,7 +411,8 @@ nav {
 
 #after-text {
     position: absolute;
-    width: max-content;
+    width: 100%;
+    height: 100%;
     color: white;
     font-size: 3.5rem;
     top: 50%;
@@ -435,6 +436,7 @@ nav {
     width: 100%;
     font-family: 'Roboto Mono', monospace;
     padding-bottom: 36px;
+    filter: blur(10px);
 }
 
 .given-text span {
@@ -459,7 +461,7 @@ nav {
     width: 1.5px;
     height: 1.4em;
     position: sticky;
-    background-color: yellow;
+    background-color: transparent;
     left: 0px;
     top: 35px;
     transition: all 0.125s ease 0s;
@@ -606,7 +608,7 @@ nav {
     outline: none;
     caret-color: yellow;
     font-size: 1.5rem;
-    overflow-x: hidden;
+    /* overflow-x: hidden; */
     overflow-y: scroll;
     border-radius: 5px;
     color: white;
@@ -638,6 +640,35 @@ nav {
 .inputOwnTextWrapper > .button:hover {
     background: whitesmoke;
     color: #050a18;
+}
+
+
+.focus-popup-wrapper {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-1);
+    opacity: 0.9;
+    background: transparent;
+    overflow: hidden;
+    z-index: 9999;
+}
+
+.focus-popup > div > div {
+    /* width: 50%; */
+    padding: 1rem 2rem;
+    /* height: 5rem; */
+    /* background: #323437; */
+    background: var(--background-color);
+    margin-left: -30%;
+    margin-top: -10%;
+    color: white;
+    font-size: 1.2rem;
+    border-radius: 10px;
 }
 
 @media (max-width: 800px) {
@@ -792,6 +823,11 @@ nav {
         width: auto;
         font-size: 2.5rem;
     }
+
+    .focus-popup > div > div {
+        margin-left: -10%;
+        margin-top: -40%;
+    }
 }
 
 @media (max-width: 600px) {
@@ -818,6 +854,11 @@ nav {
     .inputOwnTextWrapper > .button {
         font-size: 1.2rem;
     }
+
+    .focus-popup > div > div {
+        margin-left: -10%;
+        margin-top: -60%;
+    }
     
 }
 
@@ -832,6 +873,11 @@ nav {
 
     .timer-options>li {
         font-size: 1.2rem;
+    }
+
+    .focus-popup > div > div {
+        margin-left: -10%;
+        margin-top: -80%;
     }
 }
 
