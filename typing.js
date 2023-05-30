@@ -89,43 +89,43 @@ input.addEventListener("keyup", function (event) {
 });
 
 
-// document.addEventListener("keydown", function (event) {
-//     if (event.key === "Enter") {
-//         input.focus();
-//         typingArea.style.overflowY = 'hidden';
-//     }
-// });
+document.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+        input.focus();
+        typingArea.style.overflowY = 'hidden';
+    }
+});
 
-// document.addEventListener('click', (event) => {
-//     const clickedElement = event.target;
-//     if (clickedElement.tagName.toLowerCase() !== 'button' &&
-//         clickedElement.tagName.toLowerCase() !== 'a' &&
-//         clickedElement.tagName.toLowerCase() !== 'li' &&
-//         clickedElement.tagName.toLowerCase() !== 'p' &&
-//         clickedElement.tagName.toLowerCase() !== 'input' &&
-//         clickedElement.tagName.toLowerCase() !== 'i' &&
-//         clickedElement.tagName.toLowerCase() !== 'span' &&
-//         !clickedElement.classList.contains('typing-area')) {
+document.addEventListener('click', (event) => {
+    const clickedElement = event.target;
+    if (clickedElement.tagName.toLowerCase() !== 'button' &&
+        clickedElement.tagName.toLowerCase() !== 'a' &&
+        clickedElement.tagName.toLowerCase() !== 'li' &&
+        clickedElement.tagName.toLowerCase() !== 'p' &&
+        clickedElement.tagName.toLowerCase() !== 'input' &&
+        clickedElement.tagName.toLowerCase() !== 'i' &&
+        clickedElement.tagName.toLowerCase() !== 'span' &&
+        !clickedElement.classList.contains('typing-area')) {
 
-//         if (!mouseCaret.classList.contains('clicked'))
-//             applyNextColorTheme();
-//     }
+        if (!mouseCaret.classList.contains('clicked'))
+            applyNextColorTheme();
+    }
 
-//     if (clickedElement.tagName.toLowerCase() !== 'button' &&
-//         clickedElement.tagName.toLowerCase() !== 'a' &&
-//         clickedElement.tagName.toLowerCase() !== 'li' &&
-//         clickedElement.tagName.toLowerCase() !== 'p' &&
-//         clickedElement.tagName.toLowerCase() !== 'input' &&
-//         clickedElement.tagName.toLowerCase() !== 'i' &&
-//         clickedElement.tagName.toLowerCase() !== 'span' &&
-//         !clickedElement.classList.contains('typing-area')) {
+    if (clickedElement.tagName.toLowerCase() !== 'button' &&
+        clickedElement.tagName.toLowerCase() !== 'a' &&
+        clickedElement.tagName.toLowerCase() !== 'li' &&
+        clickedElement.tagName.toLowerCase() !== 'p' &&
+        clickedElement.tagName.toLowerCase() !== 'input' &&
+        clickedElement.tagName.toLowerCase() !== 'i' &&
+        clickedElement.tagName.toLowerCase() !== 'span' &&
+        !clickedElement.classList.contains('typing-area')) {
 
-//         mouseCaret.classList.add('clicked');
-//         setTimeout(function () {
-//             mouseCaret.classList.remove('clicked');
-//         }, 800);
-//     }
-// });
+        mouseCaret.classList.add('clicked');
+        setTimeout(function () {
+            mouseCaret.classList.remove('clicked');
+        }, 800);
+    }
+});
 
 window.addEventListener('mousemove', (e) => {
     mouseCaret.style.top = e.pageY + 'px';
